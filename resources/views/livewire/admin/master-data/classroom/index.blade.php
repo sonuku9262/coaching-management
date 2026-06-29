@@ -1,5 +1,4 @@
 <div>
-
     <div class="container-fluid py-4">
 
     @if(session()->has('success'))
@@ -13,15 +12,17 @@
 
         <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
 
-            <h4 class="mb-0">Role Management</h4>
+            <h4 class="mb-0">
+                Classroom Management
+            </h4>
 
             <button
                 class="btn btn-light"
                 wire:click="resetForm"
                 data-bs-toggle="modal"
-                data-bs-target="#roleModal">
+                data-bs-target="#classroomModal">
 
-                + Add Role
+                + Add Classroom
 
             </button>
 
@@ -36,7 +37,7 @@
                     <input
                         type="text"
                         class="form-control"
-                        placeholder="Search Role..."
+                        placeholder="Search Classroom..."
                         wire:model.live="search">
 
                 </div>
@@ -52,10 +53,20 @@
                         <tr>
 
                             <th>ID</th>
-                            <th>Role</th>
-                            <th>Slug</th>
+
+                            <th>Classroom</th>
+
+                            <th>Room No</th>
+
+                            <th>Floor</th>
+
+                            <th>Capacity</th>
+
                             <th>Status</th>
-                            <th width="180">Action</th>
+
+                            <th width="180">
+                                Action
+                            </th>
 
                         </tr>
 
@@ -63,19 +74,23 @@
 
                     <tbody>
 
-                        @forelse($roles as $role)
+                        @forelse($classrooms as $classroom)
 
                             <tr>
 
-                                <td>{{ $role->id }}</td>
+                                <td>{{ $classroom->id }}</td>
 
-                                <td>{{ $role->name }}</td>
+                                <td>{{ $classroom->name }}</td>
 
-                                <td>{{ $role->slug }}</td>
+                                <td>{{ $classroom->room_no }}</td>
+
+                                <td>{{ $classroom->floor }}</td>
+
+                                <td>{{ $classroom->capacity }}</td>
 
                                 <td>
 
-                                    @if($role->status)
+                                    @if($classroom->status)
 
                                         <span class="badge bg-success">
                                             Active
@@ -95,9 +110,9 @@
 
                                     <button
                                         class="btn btn-warning btn-sm"
-                                        wire:click="edit({{ $role->id }})"
+                                        wire:click="edit({{ $classroom->id }})"
                                         data-bs-toggle="modal"
-                                        data-bs-target="#roleModal">
+                                        data-bs-target="#classroomModal">
 
                                         Edit
 
@@ -105,7 +120,7 @@
 
                                     <button
                                         class="btn btn-danger btn-sm"
-                                        wire:click="delete({{ $role->id }})">
+                                        wire:click="delete({{ $classroom->id }})">
 
                                         Delete
 
@@ -119,9 +134,9 @@
 
                             <tr>
 
-                                <td colspan="5" class="text-center">
+                                <td colspan="7" class="text-center">
 
-                                    No Roles Found
+                                    No Classroom Found
 
                                 </td>
 
@@ -137,7 +152,7 @@
 
             <div class="mt-3">
 
-                {{ $roles->links() }}
+                {{ $classrooms->links() }}
 
             </div>
 
@@ -147,12 +162,12 @@
 
 </div>
 
-<!-- Role Modal -->
+<!-- Classroom Modal -->
 
 <div
     wire:ignore.self
     class="modal fade"
-    id="roleModal"
+    id="classroomModal"
     tabindex="-1">
 
     <div class="modal-dialog">
@@ -165,7 +180,7 @@
 
                     <h5 class="modal-title">
 
-                        {{ $isEdit ? 'Edit Role' : 'Add Role' }}
+                        {{ $classroom_id ? 'Edit Classroom' : 'Add Classroom' }}
 
                     </h5>
 
@@ -181,7 +196,7 @@
 
                     <div class="mb-3">
 
-                        <label>Role Name</label>
+                        <label>Classroom Name</label>
 
                         <input
                             type="text"
@@ -196,14 +211,14 @@
 
                     <div class="mb-3">
 
-                        <label>Slug</label>
+                        <label>Room No</label>
 
                         <input
                             type="text"
                             class="form-control"
-                            wire:model="slug">
+                            wire:model="room_no">
 
-                        @error('slug')
+                        @error('room_no')
                             <small class="text-danger">{{ $message }}</small>
                         @enderror
 
@@ -211,12 +226,47 @@
 
                     <div class="mb-3">
 
-                        <label>Description</label>
+                        <label>Floor</label>
 
-                        <textarea
+                        <input
+                            type="text"
                             class="form-control"
-                            rows="3"
-                            wire:model="description"></textarea>
+                            wire:model="floor">
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label>Capacity</label>
+
+                        <input
+                            type="number"
+                            class="form-control"
+                            wire:model="capacity">
+
+                        @error('capacity')
+                            <small class="text-danger">{{ $message }}</small>
+                        @enderror
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label>Status</label>
+
+                        <select
+                            class="form-select"
+                            wire:model="status">
+
+                            <option value="1">
+                                Active
+                            </option>
+
+                            <option value="0">
+                                Inactive
+                            </option>
+
+                        </select>
 
                     </div>
 
@@ -234,10 +284,9 @@
                     </button>
 
                     <button
-                        type="submit"
                         class="btn btn-primary">
 
-                        {{ $isEdit ? 'Update Role' : 'Save Role' }}
+                        {{ $classroom_id ? 'Update Classroom' : 'Save Classroom' }}
 
                     </button>
 
@@ -250,7 +299,4 @@
     </div>
 
 </div>
-
-
-
 </div>

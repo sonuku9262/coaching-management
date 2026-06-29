@@ -1,5 +1,4 @@
 <div>
-
     <div class="container-fluid py-4">
 
     @if(session()->has('success'))
@@ -13,15 +12,17 @@
 
         <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
 
-            <h4 class="mb-0">Role Management</h4>
+            <h4 class="mb-0">
+                Fee Type Management
+            </h4>
 
             <button
                 class="btn btn-light"
                 wire:click="resetForm"
                 data-bs-toggle="modal"
-                data-bs-target="#roleModal">
+                data-bs-target="#feeTypeModal">
 
-                + Add Role
+                + Add Fee Type
 
             </button>
 
@@ -36,7 +37,7 @@
                     <input
                         type="text"
                         class="form-control"
-                        placeholder="Search Role..."
+                        placeholder="Search Fee Type..."
                         wire:model.live="search">
 
                 </div>
@@ -52,8 +53,9 @@
                         <tr>
 
                             <th>ID</th>
-                            <th>Role</th>
-                            <th>Slug</th>
+                            <th>Name</th>
+                            <th>Code</th>
+                            <th>Description</th>
                             <th>Status</th>
                             <th width="180">Action</th>
 
@@ -63,19 +65,21 @@
 
                     <tbody>
 
-                        @forelse($roles as $role)
+                        @forelse($feeTypes as $feeType)
 
                             <tr>
 
-                                <td>{{ $role->id }}</td>
+                                <td>{{ $feeType->id }}</td>
 
-                                <td>{{ $role->name }}</td>
+                                <td>{{ $feeType->name }}</td>
 
-                                <td>{{ $role->slug }}</td>
+                                <td>{{ $feeType->code }}</td>
+
+                                <td>{{ $feeType->description }}</td>
 
                                 <td>
 
-                                    @if($role->status)
+                                    @if($feeType->status)
 
                                         <span class="badge bg-success">
                                             Active
@@ -95,9 +99,9 @@
 
                                     <button
                                         class="btn btn-warning btn-sm"
-                                        wire:click="edit({{ $role->id }})"
+                                        wire:click="edit({{ $feeType->id }})"
                                         data-bs-toggle="modal"
-                                        data-bs-target="#roleModal">
+                                        data-bs-target="#feeTypeModal">
 
                                         Edit
 
@@ -105,7 +109,7 @@
 
                                     <button
                                         class="btn btn-danger btn-sm"
-                                        wire:click="delete({{ $role->id }})">
+                                        wire:click="delete({{ $feeType->id }})">
 
                                         Delete
 
@@ -119,9 +123,9 @@
 
                             <tr>
 
-                                <td colspan="5" class="text-center">
+                                <td colspan="6" class="text-center">
 
-                                    No Roles Found
+                                    No Fee Type Found
 
                                 </td>
 
@@ -137,7 +141,7 @@
 
             <div class="mt-3">
 
-                {{ $roles->links() }}
+                {{ $feeTypes->links() }}
 
             </div>
 
@@ -147,12 +151,12 @@
 
 </div>
 
-<!-- Role Modal -->
+<!-- Modal -->
 
 <div
     wire:ignore.self
     class="modal fade"
-    id="roleModal"
+    id="feeTypeModal"
     tabindex="-1">
 
     <div class="modal-dialog">
@@ -165,7 +169,7 @@
 
                     <h5 class="modal-title">
 
-                        {{ $isEdit ? 'Edit Role' : 'Add Role' }}
+                        {{ $fee_type_id ? 'Edit Fee Type' : 'Add Fee Type' }}
 
                     </h5>
 
@@ -181,7 +185,7 @@
 
                     <div class="mb-3">
 
-                        <label>Role Name</label>
+                        <label>Name</label>
 
                         <input
                             type="text"
@@ -196,14 +200,14 @@
 
                     <div class="mb-3">
 
-                        <label>Slug</label>
+                        <label>Code</label>
 
                         <input
                             type="text"
                             class="form-control"
-                            wire:model="slug">
+                            wire:model="code">
 
-                        @error('slug')
+                        @error('code')
                             <small class="text-danger">{{ $message }}</small>
                         @enderror
 
@@ -217,6 +221,26 @@
                             class="form-control"
                             rows="3"
                             wire:model="description"></textarea>
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label>Status</label>
+
+                        <select
+                            class="form-select"
+                            wire:model="status">
+
+                            <option value="1">
+                                Active
+                            </option>
+
+                            <option value="0">
+                                Inactive
+                            </option>
+
+                        </select>
 
                     </div>
 
@@ -237,7 +261,7 @@
                         type="submit"
                         class="btn btn-primary">
 
-                        {{ $isEdit ? 'Update Role' : 'Save Role' }}
+                        {{ $fee_type_id ? 'Update Fee Type' : 'Save Fee Type' }}
 
                     </button>
 
@@ -250,7 +274,4 @@
     </div>
 
 </div>
-
-
-
 </div>

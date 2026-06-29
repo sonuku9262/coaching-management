@@ -4,18 +4,23 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Subject extends Model
+class FeeStructure extends Model
 {
     protected $fillable = [
         'course_id',
-        'name',
-        'code',
-        'description',
+        'fee_type_id',
+        'amount',
+        'installments',
         'status',
     ];
 
     public function course()
     {
         return $this->belongsTo(Course::class);
+    }
+
+    public function feeType()
+    {
+        return $this->belongsTo(FeeType::class);
     }
 }

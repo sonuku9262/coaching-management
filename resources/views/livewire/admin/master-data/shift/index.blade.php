@@ -1,5 +1,4 @@
 <div>
-
     <div class="container-fluid py-4">
 
     @if(session()->has('success'))
@@ -13,15 +12,15 @@
 
         <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
 
-            <h4 class="mb-0">Role Management</h4>
+            <h4 class="mb-0">Shift Management</h4>
 
             <button
                 class="btn btn-light"
                 wire:click="resetForm"
                 data-bs-toggle="modal"
-                data-bs-target="#roleModal">
+                data-bs-target="#shiftModal">
 
-                + Add Role
+                + Add Shift
 
             </button>
 
@@ -36,7 +35,7 @@
                     <input
                         type="text"
                         class="form-control"
-                        placeholder="Search Role..."
+                        placeholder="Search Shift..."
                         wire:model.live="search">
 
                 </div>
@@ -52,8 +51,9 @@
                         <tr>
 
                             <th>ID</th>
-                            <th>Role</th>
-                            <th>Slug</th>
+                            <th>Shift</th>
+                            <th>Start Time</th>
+                            <th>End Time</th>
                             <th>Status</th>
                             <th width="180">Action</th>
 
@@ -63,69 +63,71 @@
 
                     <tbody>
 
-                        @forelse($roles as $role)
+                        @forelse($shifts as $shift)
 
-                            <tr>
+                        <tr>
 
-                                <td>{{ $role->id }}</td>
+                            <td>{{ $shift->id }}</td>
 
-                                <td>{{ $role->name }}</td>
+                            <td>{{ $shift->name }}</td>
 
-                                <td>{{ $role->slug }}</td>
+                            <td>{{ $shift->start_time }}</td>
 
-                                <td>
+                            <td>{{ $shift->end_time }}</td>
 
-                                    @if($role->status)
+                            <td>
 
-                                        <span class="badge bg-success">
-                                            Active
-                                        </span>
+                                @if($shift->status)
 
-                                    @else
+                                    <span class="badge bg-success">
+                                        Active
+                                    </span>
 
-                                        <span class="badge bg-danger">
-                                            Inactive
-                                        </span>
+                                @else
 
-                                    @endif
+                                    <span class="badge bg-danger">
+                                        Inactive
+                                    </span>
 
-                                </td>
+                                @endif
 
-                                <td>
+                            </td>
 
-                                    <button
-                                        class="btn btn-warning btn-sm"
-                                        wire:click="edit({{ $role->id }})"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#roleModal">
+                            <td>
 
-                                        Edit
+                                <button
+                                    class="btn btn-warning btn-sm"
+                                    wire:click="edit({{ $shift->id }})"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#shiftModal">
 
-                                    </button>
+                                    Edit
 
-                                    <button
-                                        class="btn btn-danger btn-sm"
-                                        wire:click="delete({{ $role->id }})">
+                                </button>
 
-                                        Delete
+                                <button
+                                    class="btn btn-danger btn-sm"
+                                    wire:click="delete({{ $shift->id }})">
 
-                                    </button>
+                                    Delete
 
-                                </td>
+                                </button>
 
-                            </tr>
+                            </td>
+
+                        </tr>
 
                         @empty
 
-                            <tr>
+                        <tr>
 
-                                <td colspan="5" class="text-center">
+                            <td colspan="6" class="text-center">
 
-                                    No Roles Found
+                                No Shift Found
 
-                                </td>
+                            </td>
 
-                            </tr>
+                        </tr>
 
                         @endforelse
 
@@ -137,7 +139,7 @@
 
             <div class="mt-3">
 
-                {{ $roles->links() }}
+                {{ $shifts->links() }}
 
             </div>
 
@@ -147,12 +149,12 @@
 
 </div>
 
-<!-- Role Modal -->
+<!-- Shift Modal -->
 
 <div
     wire:ignore.self
     class="modal fade"
-    id="roleModal"
+    id="shiftModal"
     tabindex="-1">
 
     <div class="modal-dialog">
@@ -165,7 +167,7 @@
 
                     <h5 class="modal-title">
 
-                        {{ $isEdit ? 'Edit Role' : 'Add Role' }}
+                        {{ $shift_id ? 'Edit Shift' : 'Add Shift' }}
 
                     </h5>
 
@@ -181,7 +183,7 @@
 
                     <div class="mb-3">
 
-                        <label>Role Name</label>
+                        <label>Shift Name</label>
 
                         <input
                             type="text"
@@ -196,14 +198,14 @@
 
                     <div class="mb-3">
 
-                        <label>Slug</label>
+                        <label>Start Time</label>
 
                         <input
-                            type="text"
+                            type="time"
                             class="form-control"
-                            wire:model="slug">
+                            wire:model="start_time">
 
-                        @error('slug')
+                        @error('start_time')
                             <small class="text-danger">{{ $message }}</small>
                         @enderror
 
@@ -211,12 +213,31 @@
 
                     <div class="mb-3">
 
-                        <label>Description</label>
+                        <label>End Time</label>
 
-                        <textarea
+                        <input
+                            type="time"
                             class="form-control"
-                            rows="3"
-                            wire:model="description"></textarea>
+                            wire:model="end_time">
+
+                        @error('end_time')
+                            <small class="text-danger">{{ $message }}</small>
+                        @enderror
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label>Status</label>
+
+                        <select
+                            class="form-select"
+                            wire:model="status">
+
+                            <option value="1">Active</option>
+                            <option value="0">Inactive</option>
+
+                        </select>
 
                     </div>
 
@@ -234,10 +255,9 @@
                     </button>
 
                     <button
-                        type="submit"
                         class="btn btn-primary">
 
-                        {{ $isEdit ? 'Update Role' : 'Save Role' }}
+                        {{ $shift_id ? 'Update Shift' : 'Save Shift' }}
 
                     </button>
 
@@ -250,7 +270,4 @@
     </div>
 
 </div>
-
-
-
 </div>

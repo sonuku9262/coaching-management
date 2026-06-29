@@ -7,16 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class AcademicSession extends Model
 {
     protected $fillable = [
+        'academic_year_id',
         'name',
         'start_date',
         'end_date',
         'status',
-    ];
-
-    protected $casts = [
-        'start_date' => 'date',
-        'end_date' => 'date',
-        'status' => 'boolean',
     ];
 
     public function academicYear()

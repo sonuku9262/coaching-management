@@ -2,7 +2,10 @@
 
 namespace App\Models;
 
+
 use Illuminate\Database\Eloquent\Model;
+
+
 
 class AcademicYear extends Model
 {
@@ -19,8 +22,8 @@ class AcademicYear extends Model
         'status' => 'boolean',
     ];
 
-    public function sessions()
-    {
-        return $this->hasMany(AcademicSession::class);
-    }
+    public function academicSessions()
+{
+    return $this->belongsTo(AcademicSession::class);
+}
 }

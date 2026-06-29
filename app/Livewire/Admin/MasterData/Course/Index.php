@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Admin\Course;
+namespace App\Livewire\Admin\MasterData\Course;
 
 use App\Models\Course;
 use Livewire\Component;
@@ -114,7 +114,7 @@ class Index extends Component
             ->latest()
             ->paginate(10);
 
-        return view('livewire.admin.course.index', [
+        return view('livewire.admin.master-data.course.index', [
             'courses' => $courses,
         ])->layout('layouts.admin');
     }

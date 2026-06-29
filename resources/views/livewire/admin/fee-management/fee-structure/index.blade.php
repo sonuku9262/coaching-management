@@ -1,5 +1,4 @@
 <div>
-
     <div class="container-fluid py-4">
 
     @if(session()->has('success'))
@@ -13,15 +12,15 @@
 
         <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
 
-            <h4 class="mb-0">Role Management</h4>
+            <h4 class="mb-0">Fee Structure Management</h4>
 
             <button
                 class="btn btn-light"
                 wire:click="resetForm"
                 data-bs-toggle="modal"
-                data-bs-target="#roleModal">
+                data-bs-target="#feeStructureModal">
 
-                + Add Role
+                + Add Fee Structure
 
             </button>
 
@@ -36,7 +35,7 @@
                     <input
                         type="text"
                         class="form-control"
-                        placeholder="Search Role..."
+                        placeholder="Search..."
                         wire:model.live="search">
 
                 </div>
@@ -52,8 +51,10 @@
                         <tr>
 
                             <th>ID</th>
-                            <th>Role</th>
-                            <th>Slug</th>
+                            <th>Course</th>
+                            <th>Fee Type</th>
+                            <th>Amount</th>
+                            <th>Installments</th>
                             <th>Status</th>
                             <th width="180">Action</th>
 
@@ -63,28 +64,36 @@
 
                     <tbody>
 
-                        @forelse($roles as $role)
+                        @forelse($feeStructures as $fee)
 
                             <tr>
 
-                                <td>{{ $role->id }}</td>
+                                <td>{{ $fee->id }}</td>
 
-                                <td>{{ $role->name }}</td>
+                                <td>{{ $fee->course->name ?? '-' }}</td>
 
-                                <td>{{ $role->slug }}</td>
+                                <td>{{ $fee->feeType->name ?? '-' }}</td>
+
+                                <td>₹ {{ number_format($fee->amount,2) }}</td>
+
+                                <td>{{ $fee->installments }}</td>
 
                                 <td>
 
-                                    @if($role->status)
+                                    @if($fee->status)
 
                                         <span class="badge bg-success">
+
                                             Active
+
                                         </span>
 
                                     @else
 
                                         <span class="badge bg-danger">
+
                                             Inactive
+
                                         </span>
 
                                     @endif
@@ -95,9 +104,9 @@
 
                                     <button
                                         class="btn btn-warning btn-sm"
-                                        wire:click="edit({{ $role->id }})"
+                                        wire:click="edit({{ $fee->id }})"
                                         data-bs-toggle="modal"
-                                        data-bs-target="#roleModal">
+                                        data-bs-target="#feeStructureModal">
 
                                         Edit
 
@@ -105,7 +114,7 @@
 
                                     <button
                                         class="btn btn-danger btn-sm"
-                                        wire:click="delete({{ $role->id }})">
+                                        wire:click="delete({{ $fee->id }})">
 
                                         Delete
 
@@ -119,9 +128,9 @@
 
                             <tr>
 
-                                <td colspan="5" class="text-center">
+                                <td colspan="7" class="text-center">
 
-                                    No Roles Found
+                                    No Fee Structure Found
 
                                 </td>
 
@@ -137,7 +146,7 @@
 
             <div class="mt-3">
 
-                {{ $roles->links() }}
+                {{ $feeStructures->links() }}
 
             </div>
 
@@ -147,12 +156,12 @@
 
 </div>
 
-<!-- Role Modal -->
+<!-- Modal -->
 
 <div
     wire:ignore.self
     class="modal fade"
-    id="roleModal"
+    id="feeStructureModal"
     tabindex="-1">
 
     <div class="modal-dialog">
@@ -165,7 +174,7 @@
 
                     <h5 class="modal-title">
 
-                        {{ $isEdit ? 'Edit Role' : 'Add Role' }}
+                        {{ $fee_structure_id ? 'Edit Fee Structure' : 'Add Fee Structure' }}
 
                     </h5>
 
@@ -181,14 +190,27 @@
 
                     <div class="mb-3">
 
-                        <label>Role Name</label>
+                        <label>Course</label>
 
-                        <input
-                            type="text"
-                            class="form-control"
-                            wire:model="name">
+                        <select
+                            class="form-select"
+                            wire:model="course_id">
 
-                        @error('name')
+                            <option value="">Select Course</option>
+
+                            @foreach($courses as $course)
+
+                                <option value="{{ $course->id }}">
+
+                                    {{ $course->name }}
+
+                                </option>
+
+                            @endforeach
+
+                        </select>
+
+                        @error('course_id')
                             <small class="text-danger">{{ $message }}</small>
                         @enderror
 
@@ -196,14 +218,27 @@
 
                     <div class="mb-3">
 
-                        <label>Slug</label>
+                        <label>Fee Type</label>
 
-                        <input
-                            type="text"
-                            class="form-control"
-                            wire:model="slug">
+                        <select
+                            class="form-select"
+                            wire:model="fee_type_id">
 
-                        @error('slug')
+                            <option value="">Select Fee Type</option>
+
+                            @foreach($feeTypes as $feeType)
+
+                                <option value="{{ $feeType->id }}">
+
+                                    {{ $feeType->name }}
+
+                                </option>
+
+                            @endforeach
+
+                        </select>
+
+                        @error('fee_type_id')
                             <small class="text-danger">{{ $message }}</small>
                         @enderror
 
@@ -211,12 +246,47 @@
 
                     <div class="mb-3">
 
-                        <label>Description</label>
+                        <label>Amount</label>
 
-                        <textarea
+                        <input
+                            type="number"
                             class="form-control"
-                            rows="3"
-                            wire:model="description"></textarea>
+                            wire:model="amount">
+
+                        @error('amount')
+                            <small class="text-danger">{{ $message }}</small>
+                        @enderror
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label>Installments</label>
+
+                        <input
+                            type="number"
+                            class="form-control"
+                            wire:model="installments">
+
+                        @error('installments')
+                            <small class="text-danger">{{ $message }}</small>
+                        @enderror
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label>Status</label>
+
+                        <select
+                            class="form-select"
+                            wire:model="status">
+
+                            <option value="1">Active</option>
+
+                            <option value="0">Inactive</option>
+
+                        </select>
 
                     </div>
 
@@ -237,7 +307,7 @@
                         type="submit"
                         class="btn btn-primary">
 
-                        {{ $isEdit ? 'Update Role' : 'Save Role' }}
+                        {{ $fee_structure_id ? 'Update Fee Structure' : 'Save Fee Structure' }}
 
                     </button>
 
@@ -250,7 +320,4 @@
     </div>
 
 </div>
-
-
-
 </div>
