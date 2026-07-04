@@ -5,8 +5,12 @@ use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 
 Route::middleware('guest')->group(function () {
-    Volt::route('register', 'pages.auth.register')
-        ->name('register');
+    // public self-registration is disabled: accounts are created by the
+    // institute after admission — new students submit an enquiry instead
+    Route::get('register', function () {
+        return redirect()->route('contact')
+            ->with('info', 'Naye admission ke liye enquiry form bharein — admission ke baad institute aapka login bana dega.');
+    })->name('register');
 
     Volt::route('login', 'pages.auth.login')
         ->name('login');
