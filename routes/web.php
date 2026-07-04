@@ -29,6 +29,9 @@ use App\Livewire\Admin\Settings\Index as SettingsIndex;
 use App\Livewire\Admin\ActivityLog\Index as ActivityLogIndex;
 use App\Livewire\Admin\Examination\ReportCard;
 use App\Livewire\Admin\Enquiry\Index as EnquiryIndex;
+use App\Livewire\Admin\Website\Gallery\Index as GalleryIndex;
+use App\Livewire\Admin\Website\Testimonial\Index as TestimonialIndex;
+use App\Livewire\Admin\Website\Notice\Index as NoticeIndex;
 use App\Livewire\Portal\Teacher\Dashboard as TeacherDashboard;
 use App\Livewire\Portal\Student\Dashboard as StudentDashboard;
 use App\Livewire\Portal\ParentPortal\Dashboard as ParentDashboard;
@@ -199,6 +202,19 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::get('/exam-report-card', ReportCard::class)
         ->middleware('permission:exam-results.view')
         ->name('exam-report-card');
+
+    // Website CMS
+    Route::get('/website/gallery', GalleryIndex::class)
+        ->middleware('permission:gallery.view')
+        ->name('website.gallery.index');
+
+    Route::get('/website/testimonials', TestimonialIndex::class)
+        ->middleware('permission:testimonials.view')
+        ->name('website.testimonials.index');
+
+    Route::get('/website/notices', NoticeIndex::class)
+        ->middleware('permission:notices.view')
+        ->name('website.notices.index');
 
     // Settings
     Route::get('/settings', SettingsIndex::class)

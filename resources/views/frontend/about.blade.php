@@ -25,16 +25,24 @@
                         {{ \App\Models\Setting::get('institute_name', 'Our Coaching Institute') }}
                     </h2>
 
-                    <p class="text-muted">
-                        Hamara mission har student ko quality education dena hai. Experienced
-                        faculty, chhote batch size aur personal attention ke saath hum har
-                        student ki progress par focus karte hain.
-                    </p>
+                    @if(\App\Models\Setting::get('about_text'))
 
-                    <p class="text-muted">
-                        Modern management system ke saath — parents ko bachche ki attendance,
-                        fees aur results ki puri jaankari online milti hai.
-                    </p>
+                        <p class="text-muted" style="white-space: pre-line;">{{ \App\Models\Setting::get('about_text') }}</p>
+
+                    @else
+
+                        <p class="text-muted">
+                            Hamara mission har student ko quality education dena hai. Experienced
+                            faculty, chhote batch size aur personal attention ke saath hum har
+                            student ki progress par focus karte hain.
+                        </p>
+
+                        <p class="text-muted">
+                            Modern management system ke saath — parents ko bachche ki attendance,
+                            fees aur results ki puri jaankari online milti hai.
+                        </p>
+
+                    @endif
 
                     <div class="row g-3 mt-3">
 

@@ -18,6 +18,15 @@ class Index extends Component
     public $logo;
     public $current_logo;
 
+    // website content
+    public $hero_title;
+    public $hero_subtitle;
+    public $about_text;
+    public $facebook_url;
+    public $instagram_url;
+    public $youtube_url;
+    public $whatsapp_number;
+
     public function mount()
     {
         $this->institute_name = Setting::get('institute_name');
@@ -26,6 +35,14 @@ class Index extends Component
         $this->institute_address = Setting::get('institute_address');
         $this->institute_website = Setting::get('institute_website');
         $this->current_logo = Setting::get('institute_logo');
+
+        $this->hero_title = Setting::get('hero_title');
+        $this->hero_subtitle = Setting::get('hero_subtitle');
+        $this->about_text = Setting::get('about_text');
+        $this->facebook_url = Setting::get('facebook_url');
+        $this->instagram_url = Setting::get('instagram_url');
+        $this->youtube_url = Setting::get('youtube_url');
+        $this->whatsapp_number = Setting::get('whatsapp_number');
     }
 
     public function save()
@@ -43,6 +60,14 @@ class Index extends Component
         Setting::set('institute_phone', $this->institute_phone);
         Setting::set('institute_address', $this->institute_address);
         Setting::set('institute_website', $this->institute_website);
+
+        Setting::set('hero_title', $this->hero_title);
+        Setting::set('hero_subtitle', $this->hero_subtitle);
+        Setting::set('about_text', $this->about_text);
+        Setting::set('facebook_url', $this->facebook_url);
+        Setting::set('instagram_url', $this->instagram_url);
+        Setting::set('youtube_url', $this->youtube_url);
+        Setting::set('whatsapp_number', $this->whatsapp_number);
 
         if ($this->logo) {
             $this->current_logo = $this->logo->store('settings', 'public');

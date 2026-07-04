@@ -22,6 +22,30 @@
                     <p class="mb-1">✉️ {{ \App\Models\Setting::get('institute_email') }}</p>
                 @endif
 
+                <div class="d-flex gap-2 mt-3">
+
+                    @if(\App\Models\Setting::get('facebook_url'))
+                        <a href="{{ \App\Models\Setting::get('facebook_url') }}" target="_blank"
+                            class="btn btn-outline-light btn-sm">Facebook</a>
+                    @endif
+
+                    @if(\App\Models\Setting::get('instagram_url'))
+                        <a href="{{ \App\Models\Setting::get('instagram_url') }}" target="_blank"
+                            class="btn btn-outline-light btn-sm">Instagram</a>
+                    @endif
+
+                    @if(\App\Models\Setting::get('youtube_url'))
+                        <a href="{{ \App\Models\Setting::get('youtube_url') }}" target="_blank"
+                            class="btn btn-outline-light btn-sm">YouTube</a>
+                    @endif
+
+                    @if(\App\Models\Setting::get('whatsapp_number'))
+                        <a href="https://wa.me/{{ \App\Models\Setting::get('whatsapp_number') }}" target="_blank"
+                            class="btn btn-success btn-sm">WhatsApp</a>
+                    @endif
+
+                </div>
+
             </div>
 
             <div class="col-md-2 mb-4">

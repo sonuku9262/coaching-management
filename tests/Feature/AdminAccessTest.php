@@ -40,6 +40,18 @@ test('a super admin can view every admin page', function () {
     $this->actingAs($user)->get('/admin/activity-log')->assertOk();
     $this->actingAs($user)->get('/admin/reports/dues')->assertOk();
     $this->actingAs($user)->get('/admin/exam-report-card')->assertOk();
+    $this->actingAs($user)->get('/admin/enquiries')->assertOk();
+    $this->actingAs($user)->get('/admin/website/gallery')->assertOk();
+    $this->actingAs($user)->get('/admin/website/testimonials')->assertOk();
+    $this->actingAs($user)->get('/admin/website/notices')->assertOk();
+});
+
+test('a student cannot manage website content', function () {
+    $user = User::factory()->create();
+    $user->assignRole('student');
+
+    $this->actingAs($user)->get('/admin/website/gallery')->assertForbidden();
+    $this->actingAs($user)->get('/admin/website/notices')->assertForbidden();
 });
 
 test('an accountant can view fees but not user management', function () {

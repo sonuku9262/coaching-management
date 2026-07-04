@@ -97,6 +97,74 @@
 
                 </div>
 
+                <hr>
+
+                <h5 class="fw-bold mb-3">🌐 Website Content</h5>
+
+                <div class="row">
+
+                    <div class="col-md-6 mb-3">
+
+                        <label>Hero Title (home page heading)</label>
+
+                        <input type="text" class="form-control"
+                            placeholder="Default: institute name" wire:model="hero_title">
+
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+
+                        <label>Hero Subtitle</label>
+
+                        <input type="text" class="form-control"
+                            placeholder="Chhota sa tagline / description" wire:model="hero_subtitle">
+
+                    </div>
+
+                    <div class="col-12 mb-3">
+
+                        <label>About Text (about page & home)</label>
+
+                        <textarea class="form-control" rows="3" wire:model="about_text"
+                            placeholder="Institute ke baare me 2-4 lines..."></textarea>
+
+                    </div>
+
+                    <div class="col-md-3 mb-3">
+
+                        <label>Facebook URL</label>
+
+                        <input type="text" class="form-control" wire:model="facebook_url">
+
+                    </div>
+
+                    <div class="col-md-3 mb-3">
+
+                        <label>Instagram URL</label>
+
+                        <input type="text" class="form-control" wire:model="instagram_url">
+
+                    </div>
+
+                    <div class="col-md-3 mb-3">
+
+                        <label>YouTube URL</label>
+
+                        <input type="text" class="form-control" wire:model="youtube_url">
+
+                    </div>
+
+                    <div class="col-md-3 mb-3">
+
+                        <label>WhatsApp Number</label>
+
+                        <input type="text" class="form-control"
+                            placeholder="e.g. 919876543210" wire:model="whatsapp_number">
+
+                    </div>
+
+                </div>
+
                 @can('settings.edit')
                 <button type="submit" class="btn btn-primary">
                     💾 Save Settings

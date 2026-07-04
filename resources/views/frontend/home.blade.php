@@ -14,13 +14,11 @@
                     <span class="badge bg-warning text-dark fs-6 mb-3">🎓 Admissions Open {{ date('Y') }}</span>
 
                     <h1 class="display-4 fw-bold">
-                        {{ \App\Models\Setting::get('institute_name', 'Welcome to Our Coaching Institute') }}
+                        {{ \App\Models\Setting::get('hero_title', \App\Models\Setting::get('institute_name', 'Welcome to Our Coaching Institute')) }}
                     </h1>
 
                     <p class="lead mt-3 text-white-50">
-                        Expert faculty, smart classrooms, regular tests aur personal attention —
-                        aapki safalta hamari zimmedari. Students, Parents aur Teachers sabke liye
-                        apna online portal.
+                        {{ \App\Models\Setting::get('hero_subtitle', 'Expert faculty, smart classrooms, regular tests aur personal attention — aapki safalta hamari zimmedari. Students, Parents aur Teachers sabke liye apna online portal.') }}
                     </p>
 
                     <div class="d-flex flex-wrap gap-3 mt-4">
@@ -91,6 +89,32 @@
         </div>
 
     </section>
+
+    <!-- Notices -->
+    @if($notices->isNotEmpty())
+    <section class="bg-warning py-2">
+
+        <div class="container">
+
+            <div class="d-flex align-items-center gap-3 overflow-hidden">
+
+                <span class="badge bg-dark flex-shrink-0">📢 Notice</span>
+
+                <marquee behavior="scroll" direction="left" scrollamount="5" class="fw-semibold text-dark">
+
+                    @foreach($notices as $notice)
+                        {{ \Illuminate\Support\Carbon::parse($notice->notice_date)->format('d M') }} — {{ $notice->title }}
+                        @if(! $loop->last) &nbsp;&nbsp;•&nbsp;&nbsp; @endif
+                    @endforeach
+
+                </marquee>
+
+            </div>
+
+        </div>
+
+    </section>
+    @endif
 
     <!-- Stats -->
     <section class="py-4 bg-white border-bottom">
@@ -295,6 +319,69 @@
                             <div class="card-body">
                                 <h5 class="fw-bold mb-1">{{ $teacher->name }}</h5>
                                 <p class="text-muted mb-0">{{ $teacher->qualification }}</p>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                @endforeach
+
+            </div>
+
+        </div>
+
+    </section>
+    @endif
+
+    <!-- Testimonials -->
+    @if($testimonials->isNotEmpty())
+    <section class="py-5">
+
+        <div class="container">
+
+            <div class="text-center mb-5">
+                <h2 class="fw-bold section-title">What Our Students Say</h2>
+                <p class="text-muted mt-3">Hamare students aur parents ka bharosa</p>
+            </div>
+
+            <div class="row g-4">
+
+                @foreach($testimonials as $testimonial)
+
+                    <div class="col-lg-4 col-md-6">
+
+                        <div class="card border-0 shadow h-100 hover-lift">
+
+                            <div class="card-body p-4">
+
+                                <p class="text-warning mb-2 fs-5">
+                                    {{ str_repeat('★', $testimonial->rating) }}{{ str_repeat('☆', 5 - $testimonial->rating) }}
+                                </p>
+
+                                <p class="text-muted fst-italic">
+                                    "{{ \Illuminate\Support\Str::limit($testimonial->message, 180) }}"
+                                </p>
+
+                                <div class="d-flex align-items-center gap-3 mt-3">
+
+                                    @if($testimonial->photo)
+                                        <img src="{{ asset('storage/' . $testimonial->photo) }}"
+                                            width="48" height="48" class="rounded-circle" style="object-fit: cover;">
+                                    @else
+                                        <div class="rounded-circle bg-primary bg-opacity-10 d-flex align-items-center justify-content-center"
+                                            style="width: 48px; height: 48px;">
+                                            👤
+                                        </div>
+                                    @endif
+
+                                    <div>
+                                        <h6 class="fw-bold mb-0">{{ $testimonial->name }}</h6>
+                                        <small class="text-muted">{{ $testimonial->designation }}</small>
+                                    </div>
+
+                                </div>
+
                             </div>
 
                         </div>

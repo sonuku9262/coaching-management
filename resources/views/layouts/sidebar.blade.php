@@ -260,6 +260,36 @@
         </a>
         @endcan
 
+        @canany(['gallery.view', 'testimonials.view', 'notices.view'])
+        <hr>
+
+        <!-- Website -->
+        <h6 class="text-primary fw-bold mt-3 mb-2">
+            Website
+        </h6>
+
+        @can('notices.view')
+        <a href="/admin/website/notices"
+            class="nav-link ps-3 {{ request()->is('admin/website/notices*') ? 'text-primary fw-bold' : 'text-dark' }}">
+            • Notices
+        </a>
+        @endcan
+
+        @can('gallery.view')
+        <a href="/admin/website/gallery"
+            class="nav-link ps-3 {{ request()->is('admin/website/gallery*') ? 'text-primary fw-bold' : 'text-dark' }}">
+            • Gallery
+        </a>
+        @endcan
+
+        @can('testimonials.view')
+        <a href="/admin/website/testimonials"
+            class="nav-link ps-3 {{ request()->is('admin/website/testimonials*') ? 'text-primary fw-bold' : 'text-dark' }}">
+            • Testimonials
+        </a>
+        @endcan
+        @endcanany
+
         @canany(['settings.view', 'activity-logs.view'])
         <hr>
 

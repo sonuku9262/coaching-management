@@ -5,9 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\Batch;
 use App\Models\Course;
 use App\Models\Enquiry;
+use App\Models\Gallery;
+use App\Models\Notice;
 use App\Models\Setting;
 use App\Models\StudentRegistration;
 use App\Models\Teacher;
+use App\Models\Testimonial;
 use App\Notifications\EnquiryReceived;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Notification;
@@ -19,6 +22,12 @@ class FrontendController extends Controller
         return view('frontend.home', [
             'courses' => Course::where('status', 1)->latest()->take(6)->get(),
             'teachers' => Teacher::where('status', 1)->latest()->take(4)->get(),
+            'notices' => Notice::where('status', 1)
+                ->where('show_on_website', 1)
+                ->orderByDesc('notice_date')
+                ->take(5)
+                ->get(),
+            'testimonials' => Testimonial::where('status', 1)->latest()->take(6)->get(),
             'stats' => [
                 'students' => StudentRegistration::count(),
                 'teachers' => Teacher::count(),
@@ -44,13 +53,28 @@ class FrontendController extends Controller
 
     public function gallery()
     {
-        $images = Course::where('status', 1)
-            ->whereNotNull('image')
-            ->pluck('image')
-            ->map(fn ($image) => asset('storage/' . $image));
+        $photos = Gallery::where('status', 1)
+            ->orderBy('sort_order')
+            ->latest()
+            ->get()
+            ->map(fn ($gallery) => [
+                'url' => asset('storage/' . $gallery->image),
+                'title' => $gallery->title,
+            ]);
+
+        // fallback: course images until the admin uploads gallery photos
+        if ($photos->isEmpty()) {
+            $photos = Course::where('status', 1)
+                ->whereNotNull('image')
+                ->get()
+                ->map(fn ($course) => [
+                    'url' => asset('storage/' . $course->image),
+                    'title' => $course->name,
+                ]);
+        }
 
         return view('frontend.gallery', [
-            'images' => $images,
+            'photos' => $photos,
         ]);
     }
 

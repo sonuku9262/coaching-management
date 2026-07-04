@@ -24,6 +24,7 @@ class RolePermissionSeeder extends Seeder
         'Attendance' => ['student-attendance', 'teacher-attendance'],
         'Examination' => ['exams', 'exam-results'],
         'Reports' => ['reports'],
+        'Website' => ['gallery', 'testimonials', 'notices'],
         'Settings' => ['settings', 'activity-logs'],
     ];
 

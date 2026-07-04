@@ -16,16 +16,24 @@
 
         <div class="container">
 
-            @if($images->isNotEmpty())
+            @if($photos->isNotEmpty())
 
                 <div class="row g-4">
 
-                    @foreach($images as $image)
+                    @foreach($photos as $photo)
 
                         <div class="col-lg-4 col-md-6">
 
-                            <div class="card border-0 shadow hover-lift overflow-hidden">
-                                <img src="{{ $image }}" class="img-fluid" style="height: 260px; object-fit: cover;">
+                            <div class="card border-0 shadow hover-lift overflow-hidden h-100">
+
+                                <img src="{{ $photo['url'] }}" class="img-fluid" style="height: 260px; object-fit: cover;">
+
+                                @if($photo['title'])
+                                    <div class="card-body py-2 text-center">
+                                        <small class="fw-semibold">{{ $photo['title'] }}</small>
+                                    </div>
+                                @endif
+
                             </div>
 
                         </div>
@@ -42,7 +50,7 @@
 
                     <h4>Photos jald hi upload hongi.</h4>
 
-                    <p>Admin panel me courses ki images add karein — woh yahan automatically dikhengi.</p>
+                    <p>Admin panel me <strong>Website → Gallery</strong> se photos add karein — woh yahan automatically dikhengi.</p>
 
                 </div>
 
