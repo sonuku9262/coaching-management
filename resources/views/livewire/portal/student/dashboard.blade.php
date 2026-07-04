@@ -1,8 +1,6 @@
 <div>
     <div class="container-fluid py-4">
 
-        <h2 class="mb-4 fw-bold">Student Portal</h2>
-
         @if(! $student)
 
             <div class="alert alert-warning">
@@ -11,42 +9,70 @@
 
         @else
 
-            <div class="row">
+            <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
 
-                <div class="col-md-4 mb-4">
-                    <div class="card border-0 shadow">
-                        <div class="card-header bg-primary text-white">My Profile</div>
-                        <div class="card-body">
-                            <p class="mb-1"><strong>{{ $student->name }}</strong> ({{ $student->admission_no }})</p>
-                            <p class="mb-1">📘 {{ $student->course?->name }} — {{ $student->batch?->name }}</p>
-                            <p class="mb-1">⏰ {{ $student->shift?->name }}</p>
-                            <p class="mb-0">📱 {{ $student->mobile }}</p>
-                        </div>
-                    </div>
+                <div>
+                    <h3 class="fw-bold mb-0">👋 Hi, {{ $student->name }}</h3>
+                    <small class="text-muted">
+                        {{ $student->admission_no }} • {{ $student->course?->name }} — {{ $student->batch?->name }}
+                        @if($student->shift) • {{ $student->shift->name }} @endif
+                    </small>
                 </div>
 
-                <div class="col-md-4 mb-4">
-                    <div class="card border-0 shadow bg-success text-white">
+                <div class="d-flex gap-2">
+                    <a href="/student/attendance" class="btn btn-outline-primary btn-sm">📋 Attendance</a>
+                    <a href="/student/fees" class="btn btn-outline-success btn-sm">💰 Fees</a>
+                    <a href="/student/results" class="btn btn-outline-info btn-sm">📝 Results</a>
+                </div>
+
+            </div>
+
+            <!-- Summary Cards -->
+            <div class="row">
+
+                <div class="col-md-3 col-6 mb-4">
+                    <div class="card border-0 shadow bg-success text-white h-100">
                         <div class="card-body">
-                            <h6>Attendance</h6>
-                            <h2>
+                            <h6>Overall Attendance</h6>
+                            <h2 class="mb-0">
                                 @if($attendance['total'])
                                     {{ round($attendance['present'] / $attendance['total'] * 100) }}%
                                 @else
                                     —
                                 @endif
                             </h2>
-                            <small>{{ $attendance['present'] }} present / {{ $attendance['absent'] }} absent</small>
+                            <small>{{ $attendance['present'] }}/{{ $attendance['total'] }} days present</small>
                         </div>
                     </div>
                 </div>
 
-                <div class="col-md-4 mb-4">
-                    <div class="card border-0 shadow {{ $feeSummary['balance'] > 0 ? 'bg-danger' : 'bg-info' }} text-white">
+                <div class="col-md-3 col-6 mb-4">
+                    <div class="card border-0 shadow bg-primary text-white h-100">
                         <div class="card-body">
-                            <h6>Fees</h6>
-                            <h4>Paid: ₹ {{ number_format($feeSummary['paid'], 2) }}</h4>
-                            <small>Balance: ₹ {{ number_format($feeSummary['balance'], 2) }}</small>
+                            <h6>This Month</h6>
+                            <h2 class="mb-0">{{ $monthAttendance['present'] }}/{{ $monthAttendance['total'] }}</h2>
+                            <small>days present</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3 col-6 mb-4">
+                    <div class="card border-0 shadow bg-info text-white h-100">
+                        <div class="card-body">
+                            <h6>Fees Paid</h6>
+                            <h4 class="mb-0">₹ {{ number_format($feeSummary['paid'], 2) }}</h4>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3 col-6 mb-4">
+                    <div class="card border-0 shadow {{ $feeSummary['balance'] > 0 ? 'bg-danger' : 'bg-secondary' }} text-white h-100">
+                        <div class="card-body">
+                            <h6>Balance Due</h6>
+                            <h4 class="mb-0">₹ {{ number_format($feeSummary['balance'], 2) }}</h4>
+                            @if($feeSummary['balance'] > 0)
+                                <small>Kripya jald jama karein</small>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -55,43 +81,34 @@
 
             <div class="row">
 
-                <div class="col-md-6">
+                <!-- Notices -->
+                <div class="col-md-6 mb-4">
 
-                    <div class="card shadow mb-4">
+                    <div class="card shadow h-100">
 
-                        <div class="card-header bg-primary text-white">Recent Attendance</div>
+                        <div class="card-header bg-warning text-dark fw-bold">📢 Notices</div>
 
                         <div class="card-body">
 
-                            <table class="table table-bordered">
+                            @forelse($notices as $notice)
 
-                                <thead>
-                                    <tr>
-                                        <th>Date</th>
-                                        <th>Status</th>
-                                    </tr>
-                                </thead>
+                                <div class="border-bottom pb-2 mb-2">
+                                    <div class="d-flex justify-content-between">
+                                        <strong>{{ $notice->title }}</strong>
+                                        <small class="text-muted flex-shrink-0 ms-2">
+                                            {{ \Illuminate\Support\Carbon::parse($notice->notice_date)->format('d M') }}
+                                        </small>
+                                    </div>
+                                    @if($notice->description)
+                                        <small class="text-muted">{{ \Illuminate\Support\Str::limit($notice->description, 120) }}</small>
+                                    @endif
+                                </div>
 
-                                <tbody>
+                            @empty
 
-                                    @forelse($recentAttendance as $row)
-                                        <tr>
-                                            <td>{{ \Illuminate\Support\Carbon::parse($row->attendance_date)->format('d M Y') }}</td>
-                                            <td>
-                                                <span class="badge {{ $row->status === 'Present' ? 'bg-success' : ($row->status === 'Leave' ? 'bg-warning text-dark' : 'bg-danger') }}">
-                                                    {{ $row->status }}
-                                                </span>
-                                            </td>
-                                        </tr>
-                                    @empty
-                                        <tr>
-                                            <td colspan="2" class="text-center">No Data</td>
-                                        </tr>
-                                    @endforelse
+                                <p class="text-muted text-center mb-0">No notices right now.</p>
 
-                                </tbody>
-
-                            </table>
+                            @endforelse
 
                         </div>
 
@@ -99,43 +116,41 @@
 
                 </div>
 
-                <div class="col-md-6">
+                <!-- Upcoming Exams -->
+                <div class="col-md-6 mb-4">
 
-                    <div class="card shadow mb-4">
+                    <div class="card shadow h-100">
 
-                        <div class="card-header bg-success text-white">Recent Fee Payments</div>
+                        <div class="card-header bg-primary text-white fw-bold">🗓 Upcoming Exams</div>
 
                         <div class="card-body">
 
-                            <table class="table table-bordered">
+                            @forelse($upcomingExams as $schedule)
 
-                                <thead>
-                                    <tr>
-                                        <th>Receipt</th>
-                                        <th>Type</th>
-                                        <th>Paid</th>
-                                        <th>Date</th>
-                                    </tr>
-                                </thead>
+                                <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-2">
 
-                                <tbody>
+                                    <div>
+                                        <strong>{{ $schedule->subject?->name }}</strong>
+                                        <br>
+                                        <small class="text-muted">{{ $schedule->exam?->name }} • Max: {{ $schedule->total_marks }}</small>
+                                    </div>
 
-                                    @forelse($recentFees as $fee)
-                                        <tr>
-                                            <td>{{ $fee->receipt_no }}</td>
-                                            <td>{{ $fee->feeType?->name }}</td>
-                                            <td>₹ {{ number_format($fee->paid_amount, 2) }}</td>
-                                            <td>{{ \Illuminate\Support\Carbon::parse($fee->payment_date)->format('d M Y') }}</td>
-                                        </tr>
-                                    @empty
-                                        <tr>
-                                            <td colspan="4" class="text-center">No Data</td>
-                                        </tr>
-                                    @endforelse
+                                    <div class="text-end flex-shrink-0 ms-2">
+                                        <span class="badge bg-primary">
+                                            {{ \Illuminate\Support\Carbon::parse($schedule->exam_date)->format('d M Y') }}
+                                        </span>
+                                        @if($schedule->start_time)
+                                            <br><small class="text-muted">{{ substr($schedule->start_time, 0, 5) }}</small>
+                                        @endif
+                                    </div>
 
-                                </tbody>
+                                </div>
 
-                            </table>
+                            @empty
+
+                                <p class="text-muted text-center mb-0">No upcoming exams scheduled.</p>
+
+                            @endforelse
 
                         </div>
 
@@ -145,13 +160,19 @@
 
             </div>
 
+            <!-- Recent Results -->
             <div class="card shadow mb-4">
 
-                <div class="card-header bg-info text-white">Recent Exam Results</div>
+                <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
+                    <span class="fw-bold">📝 Recent Results</span>
+                    <a href="/student/results" class="btn btn-light btn-sm">View All</a>
+                </div>
 
                 <div class="card-body">
 
-                    <table class="table table-bordered">
+                    <div class="table-responsive">
+
+                    <table class="table table-bordered mb-0">
 
                         <thead>
                             <tr>
@@ -194,6 +215,8 @@
                         </tbody>
 
                     </table>
+
+                    </div>
 
                 </div>
 

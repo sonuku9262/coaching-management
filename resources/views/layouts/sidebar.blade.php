@@ -20,6 +20,26 @@
             class="nav-link mb-1 {{ request()->is('student/dashboard') ? 'bg-primary text-white rounded' : 'text-dark' }}">
             📊 My Dashboard
         </a>
+
+        <a href="/student/attendance"
+            class="nav-link mb-1 {{ request()->is('student/attendance') ? 'bg-primary text-white rounded' : 'text-dark' }}">
+            📋 My Attendance
+        </a>
+
+        <a href="/student/fees"
+            class="nav-link mb-1 {{ request()->is('student/fees') ? 'bg-primary text-white rounded' : 'text-dark' }}">
+            💰 My Fees
+        </a>
+
+        <a href="/student/results"
+            class="nav-link mb-1 {{ request()->is('student/results') ? 'bg-primary text-white rounded' : 'text-dark' }}">
+            📝 My Results
+        </a>
+
+        <a href="/profile"
+            class="nav-link mb-1 {{ request()->is('profile') ? 'bg-primary text-white rounded' : 'text-dark' }}">
+            👤 My Profile
+        </a>
         @elserole('parent')
         <a href="/parent/dashboard"
             class="nav-link mb-1 {{ request()->is('parent/dashboard') ? 'bg-primary text-white rounded' : 'text-dark' }}">

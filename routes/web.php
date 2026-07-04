@@ -82,8 +82,11 @@ Route::middleware(['auth', 'role:teacher'])->group(function () {
     Route::get('/teacher/dashboard', TeacherDashboard::class)->name('teacher.dashboard');
 });
 
-Route::middleware(['auth', 'role:student'])->group(function () {
-    Route::get('/student/dashboard', StudentDashboard::class)->name('student.dashboard');
+Route::middleware(['auth', 'role:student'])->prefix('student')->name('student.')->group(function () {
+    Route::get('/dashboard', StudentDashboard::class)->name('dashboard');
+    Route::get('/attendance', \App\Livewire\Portal\Student\Attendance::class)->name('attendance');
+    Route::get('/fees', \App\Livewire\Portal\Student\Fees::class)->name('fees');
+    Route::get('/results', \App\Livewire\Portal\Student\Results::class)->name('results');
 });
 
 Route::middleware(['auth', 'role:parent'])->group(function () {

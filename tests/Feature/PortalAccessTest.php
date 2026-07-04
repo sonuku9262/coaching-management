@@ -46,6 +46,24 @@ test('a parent lands on the parent portal from dashboard', function () {
         ->assertOk();
 });
 
+test('a student can open every student portal page', function () {
+    $user = User::factory()->create();
+    $user->assignRole('student');
+
+    $this->actingAs($user)->get('/student/dashboard')->assertOk();
+    $this->actingAs($user)->get('/student/attendance')->assertOk();
+    $this->actingAs($user)->get('/student/fees')->assertOk();
+    $this->actingAs($user)->get('/student/results')->assertOk();
+});
+
+test('a teacher cannot open student portal pages', function () {
+    $user = User::factory()->create();
+    $user->assignRole('teacher');
+
+    $this->actingAs($user)->get('/student/attendance')->assertForbidden();
+    $this->actingAs($user)->get('/student/fees')->assertForbidden();
+});
+
 test('a student cannot open the teacher portal', function () {
     $user = User::factory()->create();
     $user->assignRole('student');
