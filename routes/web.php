@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\FrontendController;
 use App\Livewire\Admin\Role\Index as RoleIndex;
 use App\Livewire\Admin\User\Index as UserIndex;
 use App\Livewire\Admin\MasterData\Course\Index as CourseIndex;
@@ -27,6 +28,7 @@ use App\Livewire\Admin\Reports\DuesReport;
 use App\Livewire\Admin\Settings\Index as SettingsIndex;
 use App\Livewire\Admin\ActivityLog\Index as ActivityLogIndex;
 use App\Livewire\Admin\Examination\ReportCard;
+use App\Livewire\Admin\Enquiry\Index as EnquiryIndex;
 use App\Livewire\Portal\Teacher\Dashboard as TeacherDashboard;
 use App\Livewire\Portal\Student\Dashboard as StudentDashboard;
 use App\Livewire\Portal\ParentPortal\Dashboard as ParentDashboard;
@@ -37,11 +39,15 @@ use App\Livewire\Portal\ParentPortal\Dashboard as ParentDashboard;
 |--------------------------------------------------------------------------
 */
 
-Route::view('/', 'frontend.home')->name('home');
-Route::view('/about', 'frontend.about');
-Route::view('/courses', 'frontend.courses');
-Route::view('/gallery', 'frontend.gallery');
-Route::view('/contact', 'frontend.contact');
+Route::get('/', [FrontendController::class, 'home'])->name('home');
+Route::get('/about', [FrontendController::class, 'about'])->name('about');
+Route::get('/courses', [FrontendController::class, 'courses'])->name('courses');
+Route::get('/gallery', [FrontendController::class, 'gallery'])->name('gallery');
+Route::get('/contact', [FrontendController::class, 'contact'])->name('contact');
+
+Route::post('/contact', [FrontendController::class, 'submitEnquiry'])
+    ->middleware('throttle:10,1')
+    ->name('enquiry.submit');
 
 /*
 |--------------------------------------------------------------------------
@@ -135,6 +141,10 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::get('/student-registrations', StudentRegistrationIndex::class)
         ->middleware('permission:students.view')
         ->name('student-registrations.index');
+
+    Route::get('/enquiries', EnquiryIndex::class)
+        ->middleware('permission:enquiries.view')
+        ->name('enquiries.index');
 
     // Teacher Management
     Route::get('/teachers', TeacherIndex::class)

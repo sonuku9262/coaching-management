@@ -118,7 +118,7 @@
         @endcan
         @endcanany
 
-        @can('students.view')
+        @canany(['students.view', 'enquiries.view'])
         <hr>
 
         <!-- Student -->
@@ -126,11 +126,20 @@
             Student Management
         </h6>
 
+        @can('students.view')
         <a href="/admin/student-registrations"
             class="nav-link ps-3 {{ request()->is('admin/student-registrations*') ? 'text-primary fw-bold' : 'text-dark' }}">
             • Student Registration
         </a>
         @endcan
+
+        @can('enquiries.view')
+        <a href="/admin/enquiries"
+            class="nav-link ps-3 {{ request()->is('admin/enquiries*') ? 'text-primary fw-bold' : 'text-dark' }}">
+            • Enquiries
+        </a>
+        @endcan
+        @endcanany
 
         @can('teachers.view')
         <hr>

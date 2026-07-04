@@ -1,32 +1,88 @@
 @extends('layouts.frontend')
 
 @section('content')
-    <section class="bg-primary text-white py-5">
 
-        <div class="container">
+    <!-- Hero -->
+    <section class="hero-section text-white py-5">
+
+        <div class="container py-4">
 
             <div class="row align-items-center">
 
-                <div class="col-md-6">
+                <div class="col-lg-7">
+
+                    <span class="badge bg-warning text-dark fs-6 mb-3">🎓 Admissions Open {{ date('Y') }}</span>
 
                     <h1 class="display-4 fw-bold">
-                        Welcome to Coaching Management System
+                        {{ \App\Models\Setting::get('institute_name', 'Welcome to Our Coaching Institute') }}
                     </h1>
 
-                    <p class="lead mt-3">
-                        Manage Students, Teachers, Courses, Fees,
-                        Attendance and Exams in one place.
+                    <p class="lead mt-3 text-white-50">
+                        Expert faculty, smart classrooms, regular tests aur personal attention —
+                        aapki safalta hamari zimmedari. Students, Parents aur Teachers sabke liye
+                        apna online portal.
                     </p>
 
-                    <a href="/login" class="btn btn-light btn-lg mt-3">
-                        Get Started
-                    </a>
+                    <div class="d-flex flex-wrap gap-3 mt-4">
+
+                        <a href="/contact" class="btn btn-warning btn-lg fw-bold">
+                            📝 Admission Enquiry
+                        </a>
+
+                        <a href="/courses" class="btn btn-outline-light btn-lg">
+                            📚 View Courses
+                        </a>
+
+                    </div>
 
                 </div>
 
-                <div class="col-md-6 text-center">
+                <div class="col-lg-5 mt-5 mt-lg-0">
 
-                    <img src="https://picsum.photos/600/400" class="img-fluid rounded shadow">
+                    <!-- Portal Login Card -->
+                    <div class="card shadow-lg border-0 rounded-4">
+
+                        <div class="card-body p-4 text-center">
+
+                            <h4 class="fw-bold mb-1 text-dark">🔐 Portal Login</h4>
+
+                            <p class="text-muted mb-4">Sabhi ke liye ek hi login</p>
+
+                            <div class="row g-3">
+
+                                <div class="col-6">
+                                    <a href="/login" class="btn btn-outline-primary w-100 py-3">
+                                        🎓<br>Student
+                                    </a>
+                                </div>
+
+                                <div class="col-6">
+                                    <a href="/login" class="btn btn-outline-success w-100 py-3">
+                                        👨‍👩‍👦<br>Parent
+                                    </a>
+                                </div>
+
+                                <div class="col-6">
+                                    <a href="/login" class="btn btn-outline-info w-100 py-3">
+                                        👨‍🏫<br>Teacher
+                                    </a>
+                                </div>
+
+                                <div class="col-6">
+                                    <a href="/login" class="btn btn-outline-dark w-100 py-3">
+                                        🛡️<br>Admin / Staff
+                                    </a>
+                                </div>
+
+                            </div>
+
+                            <small class="text-muted d-block mt-3">
+                                Login karne ke baad apne role ka dashboard automatically khulega.
+                            </small>
+
+                        </div>
+
+                    </div>
 
                 </div>
 
@@ -34,403 +90,253 @@
 
         </div>
 
-        <!-- About Section -->
+    </section>
 
-        <section class="py-5">
+    <!-- Stats -->
+    <section class="py-4 bg-white border-bottom">
 
-            <div class="container">
+        <div class="container">
 
-                <div class="row align-items-center">
+            <div class="row text-center">
 
-                    <div class="col-lg-6">
+                <div class="col-6 col-md-3 py-3">
+                    <h2 class="fw-bold text-primary mb-0">{{ number_format($stats['students']) }}+</h2>
+                    <p class="text-muted mb-0">Students</p>
+                </div>
 
-                        <img src="https://picsum.photos/600/400" class="img-fluid rounded shadow">
+                <div class="col-6 col-md-3 py-3">
+                    <h2 class="fw-bold text-primary mb-0">{{ number_format($stats['teachers']) }}+</h2>
+                    <p class="text-muted mb-0">Expert Teachers</p>
+                </div>
 
-                    </div>
+                <div class="col-6 col-md-3 py-3">
+                    <h2 class="fw-bold text-primary mb-0">{{ number_format($stats['courses']) }}+</h2>
+                    <p class="text-muted mb-0">Courses</p>
+                </div>
 
-                    <div class="col-lg-6">
-
-                        <h2 class="fw-bold mb-3">
-                            About Our Coaching
-                        </h2>
-
-                        <p class="text-muted">
-                            We provide quality education with experienced teachers,
-                            modern classrooms, online learning support, attendance,
-                            fee management and student progress tracking.
-                        </p>
-
-                        <ul class="list-group list-group-flush">
-
-                            <li class="list-group-item">
-                                ✅ Experienced Teachers
-                            </li>
-
-                            <li class="list-group-item">
-                                ✅ Smart Classrooms
-                            </li>
-
-                            <li class="list-group-item">
-                                ✅ Online Attendance
-                            </li>
-
-                            <li class="list-group-item">
-                                ✅ Result Management
-                            </li>
-
-                        </ul>
-
-                    </div>
-
+                <div class="col-6 col-md-3 py-3">
+                    <h2 class="fw-bold text-primary mb-0">{{ number_format($stats['batches']) }}+</h2>
+                    <p class="text-muted mb-0">Running Batches</p>
                 </div>
 
             </div>
 
-        </section>
-
-        <section class="bg-light py-5">
-
-            <div class="container">
-
-                <div class="text-center mb-5">
-
-                    <h2>Why Choose Us</h2>
-
-                </div>
-
-                <div class="row">
-
-                    <div class="col-md-3">
-
-                        <div class="card shadow text-center">
-
-                            <div class="card-body">
-
-                                <h1>👨‍🏫</h1>
-
-                                <h5>Expert Faculty</h5>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                    <div class="col-md-3">
-
-                        <div class="card shadow text-center">
-
-                            <div class="card-body">
-
-                                <h1>📚</h1>
-
-                                <h5>Quality Courses</h5>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                    <div class="col-md-3">
-
-                        <div class="card shadow text-center">
-
-                            <div class="card-body">
-
-                                <h1>💻</h1>
-
-                                <h5>Online Classes</h5>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                    <div class="col-md-3">
-
-                        <div class="card shadow text-center">
-
-                            <div class="card-body">
-
-                                <h1>🏆</h1>
-
-                                <h5>Best Results</h5>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </section>
-
-        <!-- Popular Courses -->
-
-        <section class="py-5">
-
-            <div class="container">
-
-                <div class="text-center mb-5">
-
-                    <h2 class="fw-bold">Popular Courses</h2>
-
-                    <p class="text-muted">
-                        Explore our most popular courses.
-                    </p>
-
-                </div>
-
-                <div class="row">
-
-                    <div class="col-md-3 mb-4">
-
-                        <div class="card shadow h-100">
-
-                            <div class="card-body text-center">
-
-                                <h1>💻</h1>
-
-                                <h5>BCA</h5>
-
-                                <p>
-                                    Bachelor of Computer Applications
-                                </p>
-
-                                <a href="#" class="btn btn-primary">
-                                    View Details
-                                </a>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                    <div class="col-md-3 mb-4">
-
-                        <div class="card shadow h-100">
-
-                            <div class="card-body text-center">
-
-                                <h1>📊</h1>
-
-                                <h5>BBA</h5>
-
-                                <p>
-                                    Bachelor of Business Administration
-                                </p>
-
-                                <a href="#" class="btn btn-primary">
-                                    View Details
-                                </a>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                    <div class="col-md-3 mb-4">
-
-                        <div class="card shadow h-100">
-
-                            <div class="card-body text-center">
-
-                                <h1>🎓</h1>
-
-                                <h5>MCA</h5>
-
-                                <p>
-                                    Master of Computer Applications
-                                </p>
-
-                                <a href="#" class="btn btn-primary">
-                                    View Details
-                                </a>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                    <div class="col-md-3 mb-4">
-
-                        <div class="card shadow h-100">
-
-                            <div class="card-body text-center">
-
-                                <h1>🖥️</h1>
-
-                                <h5>DCA</h5>
-
-                                <p>
-                                    Diploma in Computer Applications
-                                </p>
-
-                                <a href="#" class="btn btn-primary">
-                                    View Details
-                                </a>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </section>
-
-        <!-- Our Teachers -->
-
-        <section class="bg-light py-5">
-
-            <div class="container">
-
-                <div class="text-center mb-5">
-
-                    <h2 class="fw-bold">Meet Our Expert Teachers</h2>
-
-                    <p class="text-muted">
-                        Learn from experienced and dedicated faculty members.
-                    </p>
-
-                </div>
-
-                <div class="row">
-
-                    <div class="col-lg-3 col-md-6 mb-4">
-
-                        <div class="card shadow border-0 h-100">
-
-                            <img src="https://picsum.photos/300/300?random=1" class="card-img-top">
-
-                            <div class="card-body text-center">
-
-                                <h5 class="fw-bold">Rahul Kumar</h5>
-
-                                <p class="text-muted">PHP & Laravel Trainer</p>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                    <div class="col-lg-3 col-md-6 mb-4">
-
-                        <div class="card shadow border-0 h-100">
-
-                            <img src="https://picsum.photos/300/300?random=2" class="card-img-top">
-
-                            <div class="card-body text-center">
-
-                                <h5 class="fw-bold">Amit Singh</h5>
-
-                                <p class="text-muted">Java Faculty</p>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                    <div class="col-lg-3 col-md-6 mb-4">
-
-                        <div class="card shadow border-0 h-100">
-
-                            <img src="https://picsum.photos/300/300?random=3" class="card-img-top">
-
-                            <div class="card-body text-center">
-
-                                <h5 class="fw-bold">Neha Sharma</h5>
-
-                                <p class="text-muted">Python Faculty</p>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                    <div class="col-lg-3 col-md-6 mb-4">
-
-                        <div class="card shadow border-0 h-100">
-
-                            <img src="https://picsum.photos/300/300?random=4" class="card-img-top">
-
-                            <div class="card-body text-center">
-
-                                <h5 class="fw-bold">Priya Verma</h5>
-
-                                <p class="text-muted">Web Development</p>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </section>
-
-        <!-- Statistics -->
-
-        <section class="py-5 bg-primary text-white">
-
-            <div class="container">
-
-                <div class="row text-center">
-
-                    <div class="col-md-3">
-
-                        <h1>5000+</h1>
-
-                        <h5>Students</h5>
-
-                    </div>
-
-                    <div class="col-md-3">
-
-                        <h1>100+</h1>
-
-                        <h5>Teachers</h5>
-
-                    </div>
-
-                    <div class="col-md-3">
-
-                        <h1>50+</h1>
-
-                        <h5>Courses</h5>
-
-                    </div>
-
-                    <div class="col-md-3">
-
-                        <h1>98%</h1>
-
-                        <h5>Success Rate</h5>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </section>
+        </div>
 
     </section>
+
+    <!-- Why Choose Us -->
+    <section class="py-5 bg-light">
+
+        <div class="container">
+
+            <div class="text-center mb-5">
+                <h2 class="fw-bold section-title">Why Choose Us</h2>
+                <p class="text-muted mt-3">Hamari khasiyat jo humein sabse alag banati hai</p>
+            </div>
+
+            <div class="row g-4">
+
+                <div class="col-md-3 col-6">
+                    <div class="card border-0 shadow h-100 hover-lift">
+                        <div class="card-body text-center py-4">
+                            <div class="icon-circle bg-primary bg-opacity-10 mb-3">👨‍🏫</div>
+                            <h5 class="fw-bold">Expert Faculty</h5>
+                            <p class="text-muted mb-0 small">Experienced aur qualified teachers</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3 col-6">
+                    <div class="card border-0 shadow h-100 hover-lift">
+                        <div class="card-body text-center py-4">
+                            <div class="icon-circle bg-success bg-opacity-10 mb-3">📋</div>
+                            <h5 class="fw-bold">Daily Attendance</h5>
+                            <p class="text-muted mb-0 small">Parents ko absent hone par turant alert</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3 col-6">
+                    <div class="card border-0 shadow h-100 hover-lift">
+                        <div class="card-body text-center py-4">
+                            <div class="icon-circle bg-warning bg-opacity-10 mb-3">📝</div>
+                            <h5 class="fw-bold">Regular Tests</h5>
+                            <p class="text-muted mb-0 small">Report card ke saath progress tracking</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3 col-6">
+                    <div class="card border-0 shadow h-100 hover-lift">
+                        <div class="card-body text-center py-4">
+                            <div class="icon-circle bg-info bg-opacity-10 mb-3">💻</div>
+                            <h5 class="fw-bold">Online Portal</h5>
+                            <p class="text-muted mb-0 small">Attendance, fees aur results — sab online</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- Popular Courses -->
+    <section class="py-5">
+
+        <div class="container">
+
+            <div class="text-center mb-5">
+                <h2 class="fw-bold section-title">Our Courses</h2>
+                <p class="text-muted mt-3">Apne career ke liye best course chunein</p>
+            </div>
+
+            <div class="row g-4">
+
+                @forelse($courses as $course)
+
+                    <div class="col-lg-4 col-md-6">
+
+                        <div class="card border-0 shadow h-100 hover-lift">
+
+                            @if($course->image)
+                                <img src="{{ asset('storage/' . $course->image) }}"
+                                    class="card-img-top" style="height: 200px; object-fit: cover;">
+                            @else
+                                <div class="bg-primary bg-opacity-10 d-flex align-items-center justify-content-center"
+                                    style="height: 200px; font-size: 4rem;">
+                                    📚
+                                </div>
+                            @endif
+
+                            <div class="card-body">
+
+                                <h5 class="fw-bold">{{ $course->name }}</h5>
+
+                                <p class="text-muted small">
+                                    {{ \Illuminate\Support\Str::limit($course->description, 90) ?: 'Career-focused course with expert guidance.' }}
+                                </p>
+
+                                <div class="d-flex justify-content-between align-items-center">
+
+                                    <span class="badge bg-primary">
+                                        ⏱ {{ $course->duration }} {{ $course->duration_type }}
+                                    </span>
+
+                                    <span class="fw-bold text-success">
+                                        ₹ {{ number_format($course->fees) }}
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                            <div class="card-footer bg-white border-0 pb-3">
+                                <a href="/contact" class="btn btn-outline-primary w-100">
+                                    Enquire Now
+                                </a>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                @empty
+
+                    <div class="col-12 text-center text-muted">
+                        Courses jald hi update honge.
+                    </div>
+
+                @endforelse
+
+            </div>
+
+            <div class="text-center mt-4">
+                <a href="/courses" class="btn btn-primary btn-lg">
+                    View All Courses →
+                </a>
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- Teachers -->
+    @if($teachers->isNotEmpty())
+    <section class="py-5 bg-light">
+
+        <div class="container">
+
+            <div class="text-center mb-5">
+                <h2 class="fw-bold section-title">Meet Our Faculty</h2>
+                <p class="text-muted mt-3">Experienced aur dedicated teachers se seekhein</p>
+            </div>
+
+            <div class="row g-4 justify-content-center">
+
+                @foreach($teachers as $teacher)
+
+                    <div class="col-lg-3 col-md-6">
+
+                        <div class="card border-0 shadow h-100 hover-lift text-center">
+
+                            @if($teacher->photo)
+                                <img src="{{ asset('storage/' . $teacher->photo) }}"
+                                    class="card-img-top" style="height: 260px; object-fit: cover;">
+                            @else
+                                <div class="bg-secondary bg-opacity-10 d-flex align-items-center justify-content-center"
+                                    style="height: 260px; font-size: 5rem;">
+                                    👨‍🏫
+                                </div>
+                            @endif
+
+                            <div class="card-body">
+                                <h5 class="fw-bold mb-1">{{ $teacher->name }}</h5>
+                                <p class="text-muted mb-0">{{ $teacher->qualification }}</p>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                @endforeach
+
+            </div>
+
+        </div>
+
+    </section>
+    @endif
+
+    <!-- CTA -->
+    <section class="hero-section text-white py-5">
+
+        <div class="container text-center py-3">
+
+            <h2 class="fw-bold">Apna Admission Aaj Hi Book Karein!</h2>
+
+            <p class="lead text-white-50 mb-4">
+                Seats limited hain — abhi enquiry karein aur free counselling paayein.
+            </p>
+
+            <div class="d-flex justify-content-center gap-3 flex-wrap">
+
+                <a href="/contact" class="btn btn-warning btn-lg fw-bold">
+                    📝 Enquiry Now
+                </a>
+
+                @if(\App\Models\Setting::get('institute_phone'))
+                    <a href="tel:{{ \App\Models\Setting::get('institute_phone') }}" class="btn btn-outline-light btn-lg">
+                        📞 {{ \App\Models\Setting::get('institute_phone') }}
+                    </a>
+                @endif
+
+            </div>
+
+        </div>
+
+    </section>
+
 @endsection

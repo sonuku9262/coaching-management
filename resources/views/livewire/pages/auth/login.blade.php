@@ -25,47 +25,83 @@ new #[Layout('layouts.guest')] class extends Component
 }; ?>
 
 <div>
+
+    <div class="text-center mb-4">
+        <h4 class="fw-bold mb-1">🔐 Portal Login</h4>
+        <p class="text-muted mb-0">Student • Parent • Teacher • Staff</p>
+    </div>
+
     <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
+    @if (session('status'))
+        <div class="alert alert-success">
+            {{ session('status') }}
+        </div>
+    @endif
 
     <form wire:submit="login">
+
         <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input wire:model="form.email" id="email" class="block mt-1 w-full" type="email" name="email" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('form.email')" class="mt-2" />
+        <div class="mb-3">
+
+            <label for="email" class="form-label fw-semibold">Email</label>
+
+            <input wire:model="form.email" id="email" type="email" name="email"
+                class="form-control form-control-lg @error('form.email') is-invalid @enderror"
+                placeholder="apna email daalein" required autofocus autocomplete="username">
+
+            @error('form.email')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
+
         </div>
 
         <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
+        <div class="mb-3">
 
-            <x-text-input wire:model="form.password" id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="current-password" />
+            <label for="password" class="form-label fw-semibold">Password</label>
 
-            <x-input-error :messages="$errors->get('form.password')" class="mt-2" />
+            <input wire:model="form.password" id="password" type="password" name="password"
+                class="form-control form-control-lg @error('form.password') is-invalid @enderror"
+                placeholder="••••••••" required autocomplete="current-password">
+
+            @error('form.password')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
+
         </div>
 
         <!-- Remember Me -->
-        <div class="block mt-4">
-            <label for="remember" class="inline-flex items-center">
-                <input wire:model="form.remember" id="remember" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="remember">
-                <span class="ms-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
-            </label>
-        </div>
+        <div class="d-flex justify-content-between align-items-center mb-4">
 
-        <div class="flex items-center justify-end mt-4">
+            <div class="form-check">
+                <input wire:model="form.remember" id="remember" type="checkbox" name="remember"
+                    class="form-check-input">
+                <label for="remember" class="form-check-label">Remember me</label>
+            </div>
+
             @if (Route::has('password.request'))
-                <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('password.request') }}" wire:navigate>
-                    {{ __('Forgot your password?') }}
+                <a class="text-decoration-none small" href="{{ route('password.request') }}" wire:navigate>
+                    Forgot password?
                 </a>
             @endif
 
-            <x-primary-button class="ms-3">
-                {{ __('Log in') }}
-            </x-primary-button>
         </div>
+
+        <button type="submit" class="btn btn-primary btn-lg w-100">
+
+            <span wire:loading.remove>Login →</span>
+
+            <span wire:loading>Logging in...</span>
+
+        </button>
+
     </form>
+
+    <hr class="my-4">
+
+    <p class="text-center text-muted small mb-0">
+        Login problem? Institute office se sampark karein.<br>
+        Naya student? <a href="/contact" class="text-decoration-none">Admission enquiry karein</a>.
+    </p>
+
 </div>

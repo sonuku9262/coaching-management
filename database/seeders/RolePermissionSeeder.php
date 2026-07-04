@@ -18,7 +18,7 @@ class RolePermissionSeeder extends Seeder
     protected array $modules = [
         'User Management' => ['users', 'roles', 'permissions'],
         'Master Data' => ['academic-years', 'academic-sessions', 'courses', 'subjects', 'batches', 'classrooms', 'shifts'],
-        'Student Management' => ['students'],
+        'Student Management' => ['students', 'enquiries'],
         'Teacher Management' => ['teachers'],
         'Fee Management' => ['fee-types', 'fee-structures', 'fee-collections'],
         'Attendance' => ['student-attendance', 'teacher-attendance'],
