@@ -7,13 +7,13 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Coaching Management System</title>
+    <title>{{ \App\Models\Setting::get('institute_name', 'Coaching Management System') }} — Dashboard</title>
 
     @vite(['resources/css/app.css','resources/js/app.js'])
 
 </head>
 
-<body>
+<body class="admin-body">
 
     @include('layouts.header')
 
@@ -34,6 +34,8 @@
     </div>
 
     @include('layouts.footer')
+
+    @stack('scripts')
 
 </body>
 

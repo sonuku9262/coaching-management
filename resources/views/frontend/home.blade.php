@@ -5,25 +5,31 @@
     <!-- Hero -->
     <section class="hero-section text-white py-5">
 
-        <div class="container py-4">
+        <!-- floating decorative shapes -->
+        <span class="floating-shape" style="width: 140px; height: 140px; top: 8%; left: 4%;"></span>
+        <span class="floating-shape float-slow" style="width: 90px; height: 90px; bottom: 12%; left: 42%;"></span>
+        <span class="floating-shape float-fast" style="width: 60px; height: 60px; top: 18%; right: 8%;"></span>
+        <span class="floating-shape float-slow" style="width: 200px; height: 200px; bottom: -60px; right: -40px;"></span>
+
+        <div class="container py-4 position-relative">
 
             <div class="row align-items-center">
 
                 <div class="col-lg-7">
 
-                    <span class="badge bg-warning text-dark fs-6 mb-3">🎓 Admissions Open {{ date('Y') }}</span>
+                    <span class="badge bg-warning text-dark fs-6 mb-3 hero-enter hero-enter-1">🎓 Admissions Open {{ date('Y') }}</span>
 
-                    <h1 class="display-4 fw-bold">
+                    <h1 class="display-4 fw-bold hero-enter hero-enter-2">
                         {{ \App\Models\Setting::get('hero_title', \App\Models\Setting::get('institute_name', 'Welcome to Our Coaching Institute')) }}
                     </h1>
 
-                    <p class="lead mt-3 text-white-50">
+                    <p class="lead mt-3 text-white-50 hero-enter hero-enter-3">
                         {{ \App\Models\Setting::get('hero_subtitle', 'Expert faculty, smart classrooms, regular tests aur personal attention — aapki safalta hamari zimmedari. Students, Parents aur Teachers sabke liye apna online portal.') }}
                     </p>
 
-                    <div class="d-flex flex-wrap gap-3 mt-4">
+                    <div class="d-flex flex-wrap gap-3 mt-4 hero-enter hero-enter-4">
 
-                        <a href="/contact" class="btn btn-warning btn-lg fw-bold">
+                        <a href="/contact" class="btn btn-warning btn-lg fw-bold btn-pulse">
                             📝 Admission Enquiry
                         </a>
 
@@ -33,12 +39,17 @@
 
                     </div>
 
+                    <img src="{{ asset('images/hero-illustration.svg') }}"
+                        alt="Education illustration"
+                        class="hero-illustration d-none d-lg-block mt-4"
+                        style="max-height: 240px;">
+
                 </div>
 
                 <div class="col-lg-5 mt-5 mt-lg-0">
 
                     <!-- Portal Login Card -->
-                    <div class="card shadow-lg border-0 rounded-4">
+                    <div class="card shadow-lg border-0 rounded-4 hero-enter hero-enter-3">
 
                         <div class="card-body p-4 text-center">
 
@@ -49,25 +60,25 @@
                             <div class="row g-3">
 
                                 <div class="col-6">
-                                    <a href="/login" class="btn btn-outline-primary w-100 py-3">
+                                    <a href="/login" class="btn btn-outline-primary w-100 py-3 hover-lift">
                                         🎓<br>Student
                                     </a>
                                 </div>
 
                                 <div class="col-6">
-                                    <a href="/login" class="btn btn-outline-success w-100 py-3">
+                                    <a href="/login" class="btn btn-outline-success w-100 py-3 hover-lift">
                                         👨‍👩‍👦<br>Parent
                                     </a>
                                 </div>
 
                                 <div class="col-6">
-                                    <a href="/login" class="btn btn-outline-info w-100 py-3">
+                                    <a href="/login" class="btn btn-outline-info w-100 py-3 hover-lift">
                                         👨‍🏫<br>Teacher
                                     </a>
                                 </div>
 
                                 <div class="col-6">
-                                    <a href="/login" class="btn btn-outline-dark w-100 py-3">
+                                    <a href="/login" class="btn btn-outline-dark w-100 py-3 hover-lift">
                                         🛡️<br>Admin / Staff
                                     </a>
                                 </div>
@@ -123,24 +134,80 @@
 
             <div class="row text-center">
 
-                <div class="col-6 col-md-3 py-3">
-                    <h2 class="fw-bold text-primary mb-0">{{ number_format($stats['students']) }}+</h2>
+                <div class="col-6 col-md-3 py-3 reveal">
+                    <h2 class="fw-bold text-primary mb-0" data-count="{{ $stats['students'] }}" data-suffix="+">0+</h2>
                     <p class="text-muted mb-0">Students</p>
                 </div>
 
-                <div class="col-6 col-md-3 py-3">
-                    <h2 class="fw-bold text-primary mb-0">{{ number_format($stats['teachers']) }}+</h2>
+                <div class="col-6 col-md-3 py-3 reveal delay-1">
+                    <h2 class="fw-bold text-primary mb-0" data-count="{{ $stats['teachers'] }}" data-suffix="+">0+</h2>
                     <p class="text-muted mb-0">Expert Teachers</p>
                 </div>
 
-                <div class="col-6 col-md-3 py-3">
-                    <h2 class="fw-bold text-primary mb-0">{{ number_format($stats['courses']) }}+</h2>
+                <div class="col-6 col-md-3 py-3 reveal delay-2">
+                    <h2 class="fw-bold text-primary mb-0" data-count="{{ $stats['courses'] }}" data-suffix="+">0+</h2>
                     <p class="text-muted mb-0">Courses</p>
                 </div>
 
-                <div class="col-6 col-md-3 py-3">
-                    <h2 class="fw-bold text-primary mb-0">{{ number_format($stats['batches']) }}+</h2>
+                <div class="col-6 col-md-3 py-3 reveal delay-3">
+                    <h2 class="fw-bold text-primary mb-0" data-count="{{ $stats['batches'] }}" data-suffix="+">0+</h2>
                     <p class="text-muted mb-0">Running Batches</p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- About Split -->
+    <section class="py-5">
+
+        <div class="container">
+
+            <div class="row align-items-center g-5">
+
+                <div class="col-lg-6 reveal-left">
+
+                    <img src="{{ asset('images/about-illustration.svg') }}"
+                        alt="Classroom illustration" class="img-fluid">
+
+                </div>
+
+                <div class="col-lg-6 reveal-right">
+
+                    <h2 class="fw-bold mb-3">
+                        {{ \App\Models\Setting::get('institute_name', 'Hamara Institute') }} Kyun?
+                    </h2>
+
+                    <p class="text-muted">
+                        {{ \App\Models\Setting::get('about_text', 'Experienced faculty, chhote batch size aur personal attention ke saath hum har student ki progress par focus karte hain. Modern management system ke saath parents ko attendance, fees aur results ki puri jaankari online milti hai.') }}
+                    </p>
+
+                    <div class="row g-3 mt-2">
+
+                        <div class="col-6 d-flex align-items-center gap-2">
+                            <span class="fs-4">✅</span> <span class="fw-semibold">Expert Faculty</span>
+                        </div>
+
+                        <div class="col-6 d-flex align-items-center gap-2">
+                            <span class="fs-4">✅</span> <span class="fw-semibold">Daily Attendance Alerts</span>
+                        </div>
+
+                        <div class="col-6 d-flex align-items-center gap-2">
+                            <span class="fs-4">✅</span> <span class="fw-semibold">Regular Tests</span>
+                        </div>
+
+                        <div class="col-6 d-flex align-items-center gap-2">
+                            <span class="fs-4">✅</span> <span class="fw-semibold">Online Portal</span>
+                        </div>
+
+                    </div>
+
+                    <a href="/about" class="btn btn-primary mt-4">
+                        Know More →
+                    </a>
+
                 </div>
 
             </div>
@@ -154,14 +221,14 @@
 
         <div class="container">
 
-            <div class="text-center mb-5">
+            <div class="text-center mb-5 reveal">
                 <h2 class="fw-bold section-title">Why Choose Us</h2>
                 <p class="text-muted mt-3">Hamari khasiyat jo humein sabse alag banati hai</p>
             </div>
 
             <div class="row g-4">
 
-                <div class="col-md-3 col-6">
+                <div class="col-md-3 col-6 reveal">
                     <div class="card border-0 shadow h-100 hover-lift">
                         <div class="card-body text-center py-4">
                             <div class="icon-circle bg-primary bg-opacity-10 mb-3">👨‍🏫</div>
@@ -171,7 +238,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-3 col-6">
+                <div class="col-md-3 col-6 reveal delay-1">
                     <div class="card border-0 shadow h-100 hover-lift">
                         <div class="card-body text-center py-4">
                             <div class="icon-circle bg-success bg-opacity-10 mb-3">📋</div>
@@ -181,7 +248,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-3 col-6">
+                <div class="col-md-3 col-6 reveal delay-2">
                     <div class="card border-0 shadow h-100 hover-lift">
                         <div class="card-body text-center py-4">
                             <div class="icon-circle bg-warning bg-opacity-10 mb-3">📝</div>
@@ -191,7 +258,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-3 col-6">
+                <div class="col-md-3 col-6 reveal delay-3">
                     <div class="card border-0 shadow h-100 hover-lift">
                         <div class="card-body text-center py-4">
                             <div class="icon-circle bg-info bg-opacity-10 mb-3">💻</div>
@@ -212,7 +279,7 @@
 
         <div class="container">
 
-            <div class="text-center mb-5">
+            <div class="text-center mb-5 reveal">
                 <h2 class="fw-bold section-title">Our Courses</h2>
                 <p class="text-muted mt-3">Apne career ke liye best course chunein</p>
             </div>
@@ -221,19 +288,19 @@
 
                 @forelse($courses as $course)
 
-                    <div class="col-lg-4 col-md-6">
+                    <div class="col-lg-4 col-md-6 reveal {{ 'delay-' . ($loop->index % 3) }}">
 
                         <div class="card border-0 shadow h-100 hover-lift">
 
-                            @if($course->image)
-                                <img src="{{ asset('storage/' . $course->image) }}"
-                                    class="card-img-top" style="height: 200px; object-fit: cover;">
-                            @else
-                                <div class="bg-primary bg-opacity-10 d-flex align-items-center justify-content-center"
-                                    style="height: 200px; font-size: 4rem;">
-                                    📚
-                                </div>
-                            @endif
+                            <div class="img-zoom-wrap">
+                                @if($course->image)
+                                    <img src="{{ asset('storage/' . $course->image) }}"
+                                        class="card-img-top" style="height: 200px; object-fit: cover;">
+                                @else
+                                    <img src="{{ asset('images/course-placeholder.svg') }}"
+                                        class="card-img-top course-thumb" style="height: 200px; object-fit: cover;">
+                                @endif
+                            </div>
 
                             <div class="card-body">
 
@@ -277,7 +344,7 @@
 
             </div>
 
-            <div class="text-center mt-4">
+            <div class="text-center mt-4 reveal">
                 <a href="/courses" class="btn btn-primary btn-lg">
                     View All Courses →
                 </a>
@@ -293,7 +360,7 @@
 
         <div class="container">
 
-            <div class="text-center mb-5">
+            <div class="text-center mb-5 reveal">
                 <h2 class="fw-bold section-title">Meet Our Faculty</h2>
                 <p class="text-muted mt-3">Experienced aur dedicated teachers se seekhein</p>
             </div>
@@ -302,19 +369,21 @@
 
                 @foreach($teachers as $teacher)
 
-                    <div class="col-lg-3 col-md-6">
+                    <div class="col-lg-3 col-md-6 reveal-zoom {{ 'delay-' . ($loop->index % 4) }}">
 
                         <div class="card border-0 shadow h-100 hover-lift text-center">
 
-                            @if($teacher->photo)
-                                <img src="{{ asset('storage/' . $teacher->photo) }}"
-                                    class="card-img-top" style="height: 260px; object-fit: cover;">
-                            @else
-                                <div class="bg-secondary bg-opacity-10 d-flex align-items-center justify-content-center"
-                                    style="height: 260px; font-size: 5rem;">
-                                    👨‍🏫
-                                </div>
-                            @endif
+                            <div class="img-zoom-wrap">
+                                @if($teacher->photo)
+                                    <img src="{{ asset('storage/' . $teacher->photo) }}"
+                                        class="card-img-top" style="height: 260px; object-fit: cover;">
+                                @else
+                                    <div class="bg-primary bg-opacity-10 d-flex align-items-center justify-content-center course-thumb"
+                                        style="height: 260px; font-size: 5rem;">
+                                        👨‍🏫
+                                    </div>
+                                @endif
+                            </div>
 
                             <div class="card-body">
                                 <h5 class="fw-bold mb-1">{{ $teacher->name }}</h5>
@@ -340,7 +409,7 @@
 
         <div class="container">
 
-            <div class="text-center mb-5">
+            <div class="text-center mb-5 reveal">
                 <h2 class="fw-bold section-title">What Our Students Say</h2>
                 <p class="text-muted mt-3">Hamare students aur parents ka bharosa</p>
             </div>
@@ -349,7 +418,7 @@
 
                 @foreach($testimonials as $testimonial)
 
-                    <div class="col-lg-4 col-md-6">
+                    <div class="col-lg-4 col-md-6 reveal {{ 'delay-' . ($loop->index % 3) }}">
 
                         <div class="card border-0 shadow h-100 hover-lift">
 
@@ -400,17 +469,20 @@
     <!-- CTA -->
     <section class="hero-section text-white py-5">
 
-        <div class="container text-center py-3">
+        <span class="floating-shape" style="width: 120px; height: 120px; top: 10%; left: 6%;"></span>
+        <span class="floating-shape float-fast" style="width: 70px; height: 70px; bottom: 16%; right: 10%;"></span>
 
-            <h2 class="fw-bold">Apna Admission Aaj Hi Book Karein!</h2>
+        <div class="container text-center py-3 position-relative">
 
-            <p class="lead text-white-50 mb-4">
+            <h2 class="fw-bold reveal">Apna Admission Aaj Hi Book Karein!</h2>
+
+            <p class="lead text-white-50 mb-4 reveal delay-1">
                 Seats limited hain — abhi enquiry karein aur free counselling paayein.
             </p>
 
-            <div class="d-flex justify-content-center gap-3 flex-wrap">
+            <div class="d-flex justify-content-center gap-3 flex-wrap reveal delay-2">
 
-                <a href="/contact" class="btn btn-warning btn-lg fw-bold">
+                <a href="/contact" class="btn btn-warning btn-lg fw-bold btn-pulse">
                     📝 Enquiry Now
                 </a>
 

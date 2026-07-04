@@ -2,3 +2,165 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Tailwind's `.collapse` utility (visibility: collapse) clashes with
+   Bootstrap's collapse component — restore Bootstrap behaviour */
+.collapse {
+    visibility: visible;
+}
+
+/* ------------------------------------------------------------------
+   Admin panel design system
+------------------------------------------------------------------ */
+
+body.admin-body {
+    background: #f1f5f9;
+}
+
+/* ---------- sidebar ---------- */
+
+.admin-sidebar {
+    background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+    min-height: 100vh;
+    color: #cbd5e1;
+    padding: 0;
+}
+
+.admin-sidebar .sidebar-brand {
+    background: rgba(255, 255, 255, .04);
+    border-bottom: 1px solid rgba(255, 255, 255, .08);
+    padding: 1rem .75rem;
+    text-align: center;
+    color: #fff;
+}
+
+.admin-sidebar .sidebar-brand img {
+    height: 38px;
+    background: #fff;
+    border-radius: .5rem;
+    padding: .2rem;
+    margin-bottom: .35rem;
+}
+
+.admin-sidebar .sidebar-inner {
+    padding: .75rem .6rem 2rem;
+    max-height: calc(100vh - 78px);
+    overflow-y: auto;
+}
+
+.admin-sidebar .sidebar-inner::-webkit-scrollbar {
+    width: 5px;
+}
+
+.admin-sidebar .sidebar-inner::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, .15);
+    border-radius: 3px;
+}
+
+.admin-sidebar .nav-link {
+    color: #cbd5e1;
+    border-radius: .5rem;
+    padding: .45rem .75rem;
+    font-size: .9rem;
+    display: flex;
+    align-items: center;
+    gap: .55rem;
+    margin-bottom: 2px;
+    transition: background .15s ease, color .15s ease;
+}
+
+.admin-sidebar .nav-link:hover {
+    background: rgba(255, 255, 255, .08);
+    color: #fff;
+}
+
+.admin-sidebar .nav-link.active {
+    background: #2563eb;
+    color: #fff;
+    box-shadow: 0 4px 10px rgba(37, 99, 235, .35);
+}
+
+.admin-sidebar .section-toggle {
+    width: 100%;
+    background: none;
+    border: 0;
+    color: #94a3b8;
+    font-size: .72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: .7rem .75rem .35rem;
+}
+
+.admin-sidebar .section-toggle:hover {
+    color: #e2e8f0;
+}
+
+.admin-sidebar .section-toggle .chev {
+    transition: transform .2s ease;
+    font-size: .65rem;
+}
+
+.admin-sidebar .section-toggle.collapsed .chev {
+    transform: rotate(-90deg);
+}
+
+/* ---------- topbar ---------- */
+
+.admin-topbar {
+    background: linear-gradient(90deg, #1d4ed8 0%, #2563eb 60%, #3b82f6 100%);
+    box-shadow: 0 2px 12px rgba(15, 23, 42, .18);
+}
+
+/* ---------- cards ---------- */
+
+.stat-card {
+    border: 0;
+    border-radius: 1rem;
+    box-shadow: 0 4px 14px rgba(15, 23, 42, .06);
+    transition: transform .15s ease, box-shadow .15s ease;
+    overflow: hidden;
+}
+
+.stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 24px rgba(15, 23, 42, .12);
+}
+
+.stat-card .stat-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: .9rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.chart-card {
+    border: 0;
+    border-radius: 1rem;
+    box-shadow: 0 4px 14px rgba(15, 23, 42, .06);
+}
+
+.chart-card .card-header {
+    background: #fff;
+    border-bottom: 1px solid #eef2f6;
+    border-radius: 1rem 1rem 0 0 !important;
+    font-weight: 600;
+}
+
+/* soften default admin cards/tables slightly */
+
+main .card {
+    border-radius: .9rem;
+    border: 0;
+}
+
+main .table thead.table-dark th {
+    background: #1e293b;
+}

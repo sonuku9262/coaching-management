@@ -6,9 +6,11 @@
 
     <!-- Page Header -->
     <section class="hero-section text-white py-5">
-        <div class="container text-center">
-            <h1 class="fw-bold">Gallery</h1>
-            <p class="lead text-white-50 mb-0">Hamare institute ki jhalkiyan</p>
+        <span class="floating-shape" style="width: 110px; height: 110px; top: 12%; left: 5%;"></span>
+        <span class="floating-shape float-fast" style="width: 70px; height: 70px; bottom: 14%; right: 8%;"></span>
+        <div class="container text-center position-relative">
+            <h1 class="fw-bold hero-enter hero-enter-1">Gallery</h1>
+            <p class="lead text-white-50 mb-0 hero-enter hero-enter-2">Hamare institute ki jhalkiyan</p>
         </div>
     </section>
 
@@ -22,9 +24,9 @@
 
                     @foreach($photos as $photo)
 
-                        <div class="col-lg-4 col-md-6">
+                        <div class="col-lg-4 col-md-6 reveal-zoom {{ 'delay-' . ($loop->index % 3) }}">
 
-                            <div class="card border-0 shadow hover-lift overflow-hidden h-100">
+                            <div class="card border-0 shadow hover-lift overflow-hidden h-100 gallery-item">
 
                                 <img src="{{ $photo['url'] }}" class="img-fluid" style="height: 260px; object-fit: cover;">
 

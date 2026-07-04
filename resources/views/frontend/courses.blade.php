@@ -6,9 +6,11 @@
 
     <!-- Page Header -->
     <section class="hero-section text-white py-5">
-        <div class="container text-center">
-            <h1 class="fw-bold">Our Courses</h1>
-            <p class="lead text-white-50 mb-0">Apne career ke liye sahi course chunein</p>
+        <span class="floating-shape" style="width: 110px; height: 110px; top: 12%; left: 5%;"></span>
+        <span class="floating-shape float-fast" style="width: 70px; height: 70px; bottom: 14%; right: 8%;"></span>
+        <div class="container text-center position-relative">
+            <h1 class="fw-bold hero-enter hero-enter-1">Our Courses</h1>
+            <p class="lead text-white-50 mb-0 hero-enter hero-enter-2">Apne career ke liye sahi course chunein</p>
         </div>
     </section>
 
@@ -20,19 +22,19 @@
 
                 @forelse($courses as $course)
 
-                    <div class="col-lg-4 col-md-6">
+                    <div class="col-lg-4 col-md-6 reveal {{ 'delay-' . ($loop->index % 3) }}">
 
                         <div class="card border-0 shadow h-100 hover-lift">
 
-                            @if($course->image)
-                                <img src="{{ asset('storage/' . $course->image) }}"
-                                    class="card-img-top" style="height: 200px; object-fit: cover;">
-                            @else
-                                <div class="bg-primary bg-opacity-10 d-flex align-items-center justify-content-center"
-                                    style="height: 200px; font-size: 4rem;">
-                                    📚
-                                </div>
-                            @endif
+                            <div class="img-zoom-wrap">
+                                @if($course->image)
+                                    <img src="{{ asset('storage/' . $course->image) }}"
+                                        class="card-img-top" style="height: 200px; object-fit: cover;">
+                                @else
+                                    <img src="{{ asset('images/course-placeholder.svg') }}"
+                                        class="card-img-top course-thumb" style="height: 200px; object-fit: cover;">
+                                @endif
+                            </div>
 
                             <div class="card-body">
 

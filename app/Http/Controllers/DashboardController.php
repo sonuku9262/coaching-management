@@ -62,6 +62,12 @@ class DashboardController extends Controller
 
             'activeExams' => Exam::where('status', true)->count(),
 
+            'collectionChart' => $this->monthlyCollections(),
+
+            'attendanceChart' => $this->attendanceTrend(),
+
+            'courseChart' => $this->studentsPerCourse(),
+
             'recentStudents' => StudentRegistration::latest()
                 ->take(5)
                 ->get(),
@@ -72,5 +78,72 @@ class DashboardController extends Controller
                 ->get(),
 
         ]);
+    }
+
+    /**
+     * Fee collection totals for the last 6 months.
+     */
+    protected function monthlyCollections(): array
+    {
+        $labels = [];
+        $values = [];
+
+        for ($i = 5; $i >= 0; $i--) {
+            $month = now()->subMonths($i);
+
+            $labels[] = $month->format('M Y');
+
+            $values[] = (float) FeeCollection::whereBetween('payment_date', [
+                $month->copy()->startOfMonth()->toDateString(),
+                $month->copy()->endOfMonth()->toDateString(),
+            ])->sum('paid_amount');
+        }
+
+        return ['labels' => $labels, 'values' => $values];
+    }
+
+    /**
+     * Present/absent counts for the last 14 days.
+     */
+    protected function attendanceTrend(): array
+    {
+        $labels = [];
+        $present = [];
+        $absent = [];
+
+        $rows = StudentAttendance::selectRaw('attendance_date, status, count(*) as total')
+            ->whereBetween('attendance_date', [now()->subDays(13)->toDateString(), now()->toDateString()])
+            ->groupBy('attendance_date', 'status')
+            ->get()
+            ->groupBy('attendance_date');
+
+        for ($i = 13; $i >= 0; $i--) {
+            $date = now()->subDays($i);
+            $day = $rows->get($date->toDateString(), collect());
+
+            $labels[] = $date->format('d M');
+            $present[] = (int) $day->firstWhere('status', 'Present')?->total;
+            $absent[] = (int) $day->firstWhere('status', 'Absent')?->total;
+        }
+
+        return ['labels' => $labels, 'present' => $present, 'absent' => $absent];
+    }
+
+    /**
+     * Active student count per course.
+     */
+    protected function studentsPerCourse(): array
+    {
+        $rows = StudentRegistration::selectRaw('course_id, count(*) as total')
+            ->where('status', 1)
+            ->groupBy('course_id')
+            ->get();
+
+        $courses = Course::whereIn('id', $rows->pluck('course_id'))->pluck('name', 'id');
+
+        return [
+            'labels' => $rows->map(fn ($row) => $courses->get($row->course_id, 'Other'))->values()->all(),
+            'values' => $rows->pluck('total')->values()->all(),
+        ];
     }
 }

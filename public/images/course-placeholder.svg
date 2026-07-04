@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#2563eb"/>
+      <stop offset="100%" stop-color="#0f3aa0"/>
+    </linearGradient>
+  </defs>
+  <rect width="600" height="400" fill="url(#bg)"/>
+  <circle cx="80" cy="70" r="90" fill="#ffffff" opacity="0.06"/>
+  <circle cx="540" cy="340" r="120" fill="#ffffff" opacity="0.06"/>
+  <circle cx="500" cy="80" r="10" fill="#fbbf24" opacity="0.8"/>
+  <circle cx="110" cy="320" r="7" fill="#ffffff" opacity="0.4"/>
+  <path d="M470 250 l4 10 10 4 -10 4 -4 10 -4 -10 -10 -4 10 -4 Z" fill="#fbbf24" opacity=".9"/>
+
+  <!-- open book -->
+  <g transform="translate(300 200)">
+    <path d="M-110 -20 Q-55 -44 0 -20 L0 52 Q-55 28 -110 52 Z" fill="#fbbf24"/>
+    <path d="M110 -20 Q55 -44 0 -20 L0 52 Q55 28 110 52 Z" fill="#fcd34d"/>
+    <path d="M0 -20 L0 52" stroke="#b45309" stroke-width="4"/>
+    <path d="M-90 -8 Q-55 -22 -18 -12" stroke="#b45309" stroke-width="4" stroke-linecap="round" opacity=".5"/>
+    <path d="M-90 8 Q-55 -6 -18 4" stroke="#b45309" stroke-width="4" stroke-linecap="round" opacity=".5"/>
+    <path d="M18 -12 Q55 -22 90 -8" stroke="#b45309" stroke-width="4" stroke-linecap="round" opacity=".5"/>
+    <path d="M18 4 Q55 -6 90 8" stroke="#b45309" stroke-width="4" stroke-linecap="round" opacity=".5"/>
+    <!-- cap -->
+    <g transform="translate(-38 -110)">
+      <rect x="8" y="16" width="60" height="12" rx="6" fill="#0b1f4d"/>
+      <path d="M38 0 L82 18 L38 36 L-6 18 Z" fill="#111c3d"/>
+      <circle cx="38" cy="18" r="4" fill="#fbbf24"/>
+    </g>
+  </g>
+</svg>

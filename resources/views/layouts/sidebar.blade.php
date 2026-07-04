@@ -1,337 +1,199 @@
-<div class="col-md-2 bg-white border-end min-vh-100 shadow-sm p-0">
+@php
+    $menuSections = [
+        [
+            'id' => 'menuUsers',
+            'icon' => '👥',
+            'label' => 'User Management',
+            'links' => [
+                ['label' => 'Roles', 'url' => '/admin/roles', 'pattern' => 'admin/roles*', 'permission' => 'roles.view'],
+                ['label' => 'Users', 'url' => '/admin/users', 'pattern' => 'admin/users*', 'permission' => 'users.view'],
+                ['label' => 'Permissions', 'url' => '/admin/permissions', 'pattern' => 'admin/permissions*', 'permission' => 'permissions.view'],
+            ],
+        ],
+        [
+            'id' => 'menuMaster',
+            'icon' => '🗂️',
+            'label' => 'Master Data',
+            'links' => [
+                ['label' => 'Academic Year', 'url' => '/admin/academic-years', 'pattern' => 'admin/academic-years*', 'permission' => 'academic-years.view'],
+                ['label' => 'Academic Session', 'url' => '/admin/academic-sessions', 'pattern' => 'admin/academic-sessions*', 'permission' => 'academic-sessions.view'],
+                ['label' => 'Courses', 'url' => '/admin/courses', 'pattern' => 'admin/courses*', 'permission' => 'courses.view'],
+                ['label' => 'Subjects', 'url' => '/admin/subjects', 'pattern' => 'admin/subjects*', 'permission' => 'subjects.view'],
+                ['label' => 'Batches', 'url' => '/admin/batches', 'pattern' => 'admin/batches*', 'permission' => 'batches.view'],
+                ['label' => 'Classrooms', 'url' => '/admin/classrooms', 'pattern' => 'admin/classrooms*', 'permission' => 'classrooms.view'],
+                ['label' => 'Shifts', 'url' => '/admin/shifts', 'pattern' => 'admin/shifts*', 'permission' => 'shifts.view'],
+            ],
+        ],
+        [
+            'id' => 'menuStudents',
+            'icon' => '🎓',
+            'label' => 'Student Management',
+            'links' => [
+                ['label' => 'Student Registration', 'url' => '/admin/student-registrations', 'pattern' => 'admin/student-registrations*', 'permission' => 'students.view'],
+                ['label' => 'Enquiries', 'url' => '/admin/enquiries', 'pattern' => 'admin/enquiries*', 'permission' => 'enquiries.view'],
+            ],
+        ],
+        [
+            'id' => 'menuTeachers',
+            'icon' => '👨‍🏫',
+            'label' => 'Teacher Management',
+            'links' => [
+                ['label' => 'Teachers', 'url' => '/admin/teachers', 'pattern' => 'admin/teachers*', 'permission' => 'teachers.view'],
+            ],
+        ],
+        [
+            'id' => 'menuFees',
+            'icon' => '💰',
+            'label' => 'Fee Management',
+            'links' => [
+                ['label' => 'Fee Type', 'url' => '/admin/fee-types', 'pattern' => 'admin/fee-types*', 'permission' => 'fee-types.view'],
+                ['label' => 'Fee Structure', 'url' => '/admin/fee-structures', 'pattern' => 'admin/fee-structures*', 'permission' => 'fee-structures.view'],
+                ['label' => 'Fee Collection', 'url' => '/admin/fee-collections', 'pattern' => 'admin/fee-collections*', 'permission' => 'fee-collections.view'],
+            ],
+        ],
+        [
+            'id' => 'menuAttendance',
+            'icon' => '📋',
+            'label' => 'Attendance',
+            'links' => [
+                ['label' => 'Student Attendance', 'url' => '/admin/student-attendance', 'pattern' => 'admin/student-attendance*', 'permission' => 'student-attendance.view'],
+                ['label' => 'Teacher Attendance', 'url' => '/admin/teacher-attendance', 'pattern' => 'admin/teacher-attendance*', 'permission' => 'teacher-attendance.view'],
+            ],
+        ],
+        [
+            'id' => 'menuExams',
+            'icon' => '📝',
+            'label' => 'Examination',
+            'links' => [
+                ['label' => 'Exams', 'url' => '/admin/exams', 'pattern' => 'admin/exams*', 'permission' => 'exams.view'],
+                ['label' => 'Marks Entry', 'url' => '/admin/exam-results', 'pattern' => 'admin/exam-results*', 'permission' => 'exam-results.view'],
+                ['label' => 'Report Card', 'url' => '/admin/exam-report-card', 'pattern' => 'admin/exam-report-card*', 'permission' => 'exam-results.view'],
+            ],
+        ],
+        [
+            'id' => 'menuReports',
+            'icon' => '📊',
+            'label' => 'Reports',
+            'links' => [
+                ['label' => 'Fee Collection', 'url' => '/admin/reports/fees', 'pattern' => 'admin/reports/fees*', 'permission' => 'reports.view'],
+                ['label' => 'Attendance', 'url' => '/admin/reports/attendance', 'pattern' => 'admin/reports/attendance*', 'permission' => 'reports.view'],
+                ['label' => 'Fee Dues', 'url' => '/admin/reports/dues', 'pattern' => 'admin/reports/dues*', 'permission' => 'reports.view'],
+            ],
+        ],
+        [
+            'id' => 'menuWebsite',
+            'icon' => '🌐',
+            'label' => 'Website',
+            'links' => [
+                ['label' => 'Notices', 'url' => '/admin/website/notices', 'pattern' => 'admin/website/notices*', 'permission' => 'notices.view'],
+                ['label' => 'Gallery', 'url' => '/admin/website/gallery', 'pattern' => 'admin/website/gallery*', 'permission' => 'gallery.view'],
+                ['label' => 'Testimonials', 'url' => '/admin/website/testimonials', 'pattern' => 'admin/website/testimonials*', 'permission' => 'testimonials.view'],
+            ],
+        ],
+        [
+            'id' => 'menuSystem',
+            'icon' => '⚙️',
+            'label' => 'System',
+            'links' => [
+                ['label' => 'Settings', 'url' => '/admin/settings', 'pattern' => 'admin/settings*', 'permission' => 'settings.view'],
+                ['label' => 'Activity Log', 'url' => '/admin/activity-log', 'pattern' => 'admin/activity-log*', 'permission' => 'activity-logs.view'],
+            ],
+        ],
+    ];
+@endphp
 
-    <div class="text-center py-3 bg-primary text-white border-bottom">
+<div class="col-md-2 admin-sidebar">
+
+    <div class="sidebar-brand">
         @if(\App\Models\Setting::get('institute_logo'))
-            <img src="{{ asset('storage/' . \App\Models\Setting::get('institute_logo')) }}" height="36" class="mb-1 bg-white rounded p-1">
+            <img src="{{ asset('storage/' . \App\Models\Setting::get('institute_logo')) }}">
         @endif
-        <h5 class="mb-0 fw-bold">{{ \App\Models\Setting::get('institute_name', 'Coaching ERP') }}</h5>
+        <h6 class="mb-0 fw-bold">{{ \App\Models\Setting::get('institute_name', 'Coaching ERP') }}</h6>
     </div>
 
-    <div class="p-2">
+    <div class="sidebar-inner">
 
         <!-- Dashboard -->
         @role('teacher')
         <a href="/teacher/dashboard"
-            class="nav-link mb-1 {{ request()->is('teacher/dashboard') ? 'bg-primary text-white rounded' : 'text-dark' }}">
-            📊 My Dashboard
+            class="nav-link {{ request()->is('teacher/dashboard') ? 'active' : '' }}">
+            <span>📊</span> My Dashboard
         </a>
         @elserole('student')
         <a href="/student/dashboard"
-            class="nav-link mb-1 {{ request()->is('student/dashboard') ? 'bg-primary text-white rounded' : 'text-dark' }}">
-            📊 My Dashboard
+            class="nav-link {{ request()->is('student/dashboard') ? 'active' : '' }}">
+            <span>📊</span> My Dashboard
         </a>
 
         <a href="/student/attendance"
-            class="nav-link mb-1 {{ request()->is('student/attendance') ? 'bg-primary text-white rounded' : 'text-dark' }}">
-            📋 My Attendance
+            class="nav-link {{ request()->is('student/attendance') ? 'active' : '' }}">
+            <span>📋</span> My Attendance
         </a>
 
         <a href="/student/fees"
-            class="nav-link mb-1 {{ request()->is('student/fees') ? 'bg-primary text-white rounded' : 'text-dark' }}">
-            💰 My Fees
+            class="nav-link {{ request()->is('student/fees') ? 'active' : '' }}">
+            <span>💰</span> My Fees
         </a>
 
         <a href="/student/results"
-            class="nav-link mb-1 {{ request()->is('student/results') ? 'bg-primary text-white rounded' : 'text-dark' }}">
-            📝 My Results
+            class="nav-link {{ request()->is('student/results') ? 'active' : '' }}">
+            <span>📝</span> My Results
         </a>
 
         <a href="/profile"
-            class="nav-link mb-1 {{ request()->is('profile') ? 'bg-primary text-white rounded' : 'text-dark' }}">
-            👤 My Profile
+            class="nav-link {{ request()->is('profile') ? 'active' : '' }}">
+            <span>👤</span> My Profile
         </a>
         @elserole('parent')
         <a href="/parent/dashboard"
-            class="nav-link mb-1 {{ request()->is('parent/dashboard') ? 'bg-primary text-white rounded' : 'text-dark' }}">
-            📊 My Dashboard
+            class="nav-link {{ request()->is('parent/dashboard') ? 'active' : '' }}">
+            <span>📊</span> My Dashboard
         </a>
         @else
         <a href="/dashboard"
-            class="nav-link mb-1 {{ request()->is('dashboard') ? 'bg-primary text-white rounded' : 'text-dark' }}">
-            📊 Dashboard
+            class="nav-link {{ request()->is('dashboard') ? 'active' : '' }}">
+            <span>📊</span> Dashboard
         </a>
         @endrole
 
-        @canany(['roles.view', 'users.view', 'permissions.view'])
-        <hr>
+        @foreach($menuSections as $section)
 
-        <!-- User Management -->
-        <h6 class="text-primary fw-bold mt-3 mb-2">
-            User Management
-        </h6>
+            @php
+                $visibleLinks = collect($section['links'])
+                    ->filter(fn ($link) => auth()->user()->can($link['permission']));
 
-        @can('roles.view')
-        <a href="/admin/roles" class="nav-link ps-3 {{ request()->is('admin/roles*') ? 'text-primary fw-bold' : 'text-dark' }}">
-            • Roles
-        </a>
-        @endcan
+                $sectionActive = $visibleLinks->contains(fn ($link) => request()->is($link['pattern']));
+            @endphp
 
-        @can('users.view')
-        <a href="/admin/users" class="nav-link ps-3 {{ request()->is('admin/users*') ? 'text-primary fw-bold' : 'text-dark' }}">
-            • Users
-        </a>
-        @endcan
+            @if($visibleLinks->isNotEmpty())
 
-        @can('permissions.view')
-        <a href="/admin/permissions"
-            class="nav-link ps-3 {{ request()->is('admin/permissions*') ? 'text-primary fw-bold' : 'text-dark' }}">
-            • Permissions
-        </a>
-        @endcan
-        @endcanany
+                <button
+                    class="section-toggle {{ $sectionActive ? '' : 'collapsed' }}"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#{{ $section['id'] }}">
 
-        @canany(['academic-years.view', 'academic-sessions.view', 'courses.view', 'subjects.view', 'batches.view', 'classrooms.view', 'shifts.view'])
-        <hr>
+                    <span>{{ $section['icon'] }} {{ $section['label'] }}</span>
 
-        <!-- Master Data -->
-        <h6 class="text-primary fw-bold mt-3 mb-2">
-            Master Data
-        </h6>
+                    <span class="chev">▼</span>
 
-        @can('academic-years.view')
-        <a href="/admin/academic-years"
-            class="nav-link ps-3 {{ request()->is('admin/academic-years*') ? 'text-primary fw-bold' : 'text-dark' }}">
-            • Academic Year
-        </a>
-        @endcan
+                </button>
 
-        @can('academic-sessions.view')
-        <a href="/admin/academic-sessions"
-            class="nav-link ps-3 {{ request()->is('admin/academic-sessions*') ? 'text-primary fw-bold' : 'text-dark' }}">
-            • Academic Session
-        </a>
-        @endcan
+                <div class="collapse {{ $sectionActive ? 'show' : '' }}" id="{{ $section['id'] }}">
 
-        @can('courses.view')
-        <a href="/admin/courses"
-            class="nav-link ps-3 {{ request()->is('admin/courses*') ? 'text-primary fw-bold' : 'text-dark' }}">
-            • Courses
-        </a>
-        @endcan
+                    @foreach($visibleLinks as $link)
 
-        @can('subjects.view')
-        <a href="/admin/subjects"
-            class="nav-link ps-3 {{ request()->is('admin/subjects*') ? 'text-primary fw-bold' : 'text-dark' }}">
-            • Subjects
-        </a>
-        @endcan
+                        <a href="{{ $link['url'] }}"
+                            class="nav-link {{ request()->is($link['pattern']) ? 'active' : '' }}">
+                            <span>•</span> {{ $link['label'] }}
+                        </a>
 
-        @can('batches.view')
-        <a href="/admin/batches"
-            class="nav-link ps-3 {{ request()->is('admin/batches*') ? 'text-primary fw-bold' : 'text-dark' }}">
-            • Batches
-        </a>
-        @endcan
+                    @endforeach
 
-        @can('classrooms.view')
-        <a href="/admin/classrooms"
-            class="nav-link ps-3 {{ request()->is('admin/classrooms*') ? 'text-primary fw-bold' : 'text-dark' }}">
-            • Classrooms
-        </a>
-        @endcan
+                </div>
 
-        @can('shifts.view')
-        <a href="/admin/shifts"
-            class="nav-link ps-3 {{ request()->is('admin/shifts*') ? 'text-primary fw-bold' : 'text-dark' }}">
-            • Shifts
-        </a>
-        @endcan
-        @endcanany
+            @endif
 
-        @canany(['students.view', 'enquiries.view'])
-        <hr>
-
-        <!-- Student -->
-        <h6 class="text-primary fw-bold mt-3 mb-2">
-            Student Management
-        </h6>
-
-        @can('students.view')
-        <a href="/admin/student-registrations"
-            class="nav-link ps-3 {{ request()->is('admin/student-registrations*') ? 'text-primary fw-bold' : 'text-dark' }}">
-            • Student Registration
-        </a>
-        @endcan
-
-        @can('enquiries.view')
-        <a href="/admin/enquiries"
-            class="nav-link ps-3 {{ request()->is('admin/enquiries*') ? 'text-primary fw-bold' : 'text-dark' }}">
-            • Enquiries
-        </a>
-        @endcan
-        @endcanany
-
-        @can('teachers.view')
-        <hr>
-
-        <!-- Teacher -->
-        <h6 class="text-primary fw-bold mt-3 mb-2">
-            Teacher Management
-        </h6>
-
-        <a href="/admin/teachers"
-            class="nav-link ps-3 {{ request()->is('admin/teachers*') ? 'text-primary fw-bold' : 'text-dark' }}">
-            • Teachers
-        </a>
-        @endcan
-
-        @canany(['fee-types.view', 'fee-structures.view', 'fee-collections.view'])
-        <hr>
-
-        <!-- Fee -->
-        <h6 class="text-primary fw-bold mt-3 mb-2">
-            Fee Management
-        </h6>
-
-        @can('fee-types.view')
-        <a href="/admin/fee-types"
-            class="nav-link ps-3 {{ request()->is('admin/fee-types*') ? 'text-primary fw-bold' : 'text-dark' }}">
-            • Fee Type
-        </a>
-        @endcan
-
-        @can('fee-structures.view')
-        <a href="/admin/fee-structures"
-            class="nav-link ps-3 {{ request()->is('admin/fee-structures*') ? 'text-primary fw-bold' : 'text-dark' }}">
-            • Fee Structure
-        </a>
-        @endcan
-
-        @can('fee-collections.view')
-        <a href="/admin/fee-collections"
-            class="nav-link ps-3 {{ request()->is('admin/fee-collections*') ? 'text-primary fw-bold' : 'text-dark' }}">
-            • Fee Collection
-        </a>
-        @endcan
-        @endcanany
-
-        @canany(['student-attendance.view', 'teacher-attendance.view'])
-        <hr>
-
-        <!-- Attendance -->
-        <h6 class="text-primary fw-bold mt-3 mb-2">
-            Attendance
-        </h6>
-
-        @can('student-attendance.view')
-        <a href="/admin/student-attendance"
-            class="nav-link ps-3 {{ request()->is('admin/student-attendance*') ? 'text-primary fw-bold' : 'text-dark' }}">
-            • Student Attendance
-        </a>
-        @endcan
-
-        @can('teacher-attendance.view')
-        <a href="/admin/teacher-attendance"
-            class="nav-link ps-3 {{ request()->is('admin/teacher-attendance*') ? 'text-primary fw-bold' : 'text-dark' }}">
-            • Teacher Attendance
-        </a>
-        @endcan
-        @endcanany
-
-        @canany(['exams.view', 'exam-results.view'])
-        <hr>
-
-        <!-- Examination -->
-        <h6 class="text-primary fw-bold mt-3 mb-2">
-            Examination
-        </h6>
-
-        @can('exams.view')
-        <a href="/admin/exams"
-            class="nav-link ps-3 {{ request()->is('admin/exams*') ? 'text-primary fw-bold' : 'text-dark' }}">
-            • Exams
-        </a>
-        @endcan
-
-        @can('exam-results.view')
-        <a href="/admin/exam-results"
-            class="nav-link ps-3 {{ request()->is('admin/exam-results*') ? 'text-primary fw-bold' : 'text-dark' }}">
-            • Marks Entry
-        </a>
-
-        <a href="/admin/exam-report-card"
-            class="nav-link ps-3 {{ request()->is('admin/exam-report-card*') ? 'text-primary fw-bold' : 'text-dark' }}">
-            • Report Card
-        </a>
-        @endcan
-        @endcanany
-
-        @can('reports.view')
-        <hr>
-
-        <!-- Reports -->
-        <h6 class="text-primary fw-bold mt-3 mb-2">
-            Reports
-        </h6>
-
-        <a href="/admin/reports/fees"
-            class="nav-link ps-3 {{ request()->is('admin/reports/fees*') ? 'text-primary fw-bold' : 'text-dark' }}">
-            • Fee Collection
-        </a>
-
-        <a href="/admin/reports/attendance"
-            class="nav-link ps-3 {{ request()->is('admin/reports/attendance*') ? 'text-primary fw-bold' : 'text-dark' }}">
-            • Attendance
-        </a>
-
-        <a href="/admin/reports/dues"
-            class="nav-link ps-3 {{ request()->is('admin/reports/dues*') ? 'text-primary fw-bold' : 'text-dark' }}">
-            • Fee Dues
-        </a>
-        @endcan
-
-        @canany(['gallery.view', 'testimonials.view', 'notices.view'])
-        <hr>
-
-        <!-- Website -->
-        <h6 class="text-primary fw-bold mt-3 mb-2">
-            Website
-        </h6>
-
-        @can('notices.view')
-        <a href="/admin/website/notices"
-            class="nav-link ps-3 {{ request()->is('admin/website/notices*') ? 'text-primary fw-bold' : 'text-dark' }}">
-            • Notices
-        </a>
-        @endcan
-
-        @can('gallery.view')
-        <a href="/admin/website/gallery"
-            class="nav-link ps-3 {{ request()->is('admin/website/gallery*') ? 'text-primary fw-bold' : 'text-dark' }}">
-            • Gallery
-        </a>
-        @endcan
-
-        @can('testimonials.view')
-        <a href="/admin/website/testimonials"
-            class="nav-link ps-3 {{ request()->is('admin/website/testimonials*') ? 'text-primary fw-bold' : 'text-dark' }}">
-            • Testimonials
-        </a>
-        @endcan
-        @endcanany
-
-        @canany(['settings.view', 'activity-logs.view'])
-        <hr>
-
-        <!-- Settings -->
-        <h6 class="text-primary fw-bold mt-3 mb-2">
-            System
-        </h6>
-
-        @can('settings.view')
-        <a href="/admin/settings"
-            class="nav-link ps-3 {{ request()->is('admin/settings*') ? 'text-primary fw-bold' : 'text-dark' }}">
-            • Settings
-        </a>
-        @endcan
-
-        @can('activity-logs.view')
-        <a href="/admin/activity-log"
-            class="nav-link ps-3 {{ request()->is('admin/activity-log*') ? 'text-primary fw-bold' : 'text-dark' }}">
-            • Activity Log
-        </a>
-        @endcan
-        @endcanany
+        @endforeach
 
     </div>
 

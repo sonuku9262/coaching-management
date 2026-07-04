@@ -6,9 +6,11 @@
 
     <!-- Page Header -->
     <section class="hero-section text-white py-5">
-        <div class="container text-center">
-            <h1 class="fw-bold">Contact & Admission Enquiry</h1>
-            <p class="lead text-white-50 mb-0">Hum aapki madad ke liye taiyaar hain</p>
+        <span class="floating-shape" style="width: 110px; height: 110px; top: 12%; left: 5%;"></span>
+        <span class="floating-shape float-fast" style="width: 70px; height: 70px; bottom: 14%; right: 8%;"></span>
+        <div class="container text-center position-relative">
+            <h1 class="fw-bold hero-enter hero-enter-1">Contact & Admission Enquiry</h1>
+            <p class="lead text-white-50 mb-0 hero-enter hero-enter-2">Hum aapki madad ke liye taiyaar hain</p>
         </div>
     </section>
 
@@ -19,7 +21,7 @@
             <div class="row g-5">
 
                 <!-- Enquiry Form -->
-                <div class="col-lg-7">
+                <div class="col-lg-7 reveal-left">
 
                     <div class="card border-0 shadow rounded-4">
 
@@ -134,7 +136,7 @@
                 </div>
 
                 <!-- Contact Info -->
-                <div class="col-lg-5">
+                <div class="col-lg-5 reveal-right">
 
                     <div class="card border-0 shadow rounded-4 mb-4">
 

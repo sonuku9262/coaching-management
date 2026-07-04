@@ -6,9 +6,11 @@
 
     <!-- Page Header -->
     <section class="hero-section text-white py-5">
-        <div class="container text-center">
-            <h1 class="fw-bold">About Us</h1>
-            <p class="lead text-white-50 mb-0">Humein jaaniye — hamara mission aur hamari team</p>
+        <span class="floating-shape" style="width: 110px; height: 110px; top: 12%; left: 5%;"></span>
+        <span class="floating-shape float-fast" style="width: 70px; height: 70px; bottom: 14%; right: 8%;"></span>
+        <div class="container text-center position-relative">
+            <h1 class="fw-bold hero-enter hero-enter-1">About Us</h1>
+            <p class="lead text-white-50 mb-0 hero-enter hero-enter-2">Humein jaaniye — hamara mission aur hamari team</p>
         </div>
     </section>
 
@@ -19,7 +21,7 @@
 
             <div class="row align-items-center g-5">
 
-                <div class="col-lg-6">
+                <div class="col-lg-6 reveal-left">
 
                     <h2 class="fw-bold mb-3">
                         {{ \App\Models\Setting::get('institute_name', 'Our Coaching Institute') }}
@@ -92,7 +94,10 @@
 
                 </div>
 
-                <div class="col-lg-6">
+                <div class="col-lg-6 reveal-right">
+
+                    <img src="{{ asset('images/about-illustration.svg') }}"
+                        alt="Classroom illustration" class="img-fluid mb-4">
 
                     <div class="card border-0 shadow rounded-4">
 
@@ -139,7 +144,7 @@
 
         <div class="container">
 
-            <div class="text-center mb-5">
+            <div class="text-center mb-5 reveal">
                 <h2 class="fw-bold section-title">Our Faculty</h2>
             </div>
 
@@ -147,7 +152,7 @@
 
                 @foreach($teachers as $teacher)
 
-                    <div class="col-lg-3 col-md-4 col-6">
+                    <div class="col-lg-3 col-md-4 col-6 reveal-zoom {{ 'delay-' . ($loop->index % 4) }}">
 
                         <div class="card border-0 shadow h-100 hover-lift text-center">
 

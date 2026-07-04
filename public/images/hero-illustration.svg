@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 400" fill="none">
+  <!-- backdrop blob -->
+  <ellipse cx="260" cy="210" rx="230" ry="170" fill="#ffffff" opacity="0.08"/>
+  <ellipse cx="260" cy="210" rx="180" ry="135" fill="#ffffff" opacity="0.08"/>
+
+  <!-- desk -->
+  <rect x="90" y="290" width="340" height="14" rx="7" fill="#0b3aa5"/>
+  <rect x="120" y="304" width="14" height="60" rx="6" fill="#0b3aa5"/>
+  <rect x="386" y="304" width="14" height="60" rx="6" fill="#0b3aa5"/>
+
+  <!-- open book -->
+  <path d="M150 250 Q205 232 260 250 L260 292 Q205 274 150 292 Z" fill="#fbbf24"/>
+  <path d="M370 250 Q315 232 260 250 L260 292 Q315 274 370 292 Z" fill="#fcd34d"/>
+  <path d="M260 250 L260 292" stroke="#b45309" stroke-width="3"/>
+  <path d="M168 258 Q205 246 244 256" stroke="#b45309" stroke-width="3" stroke-linecap="round" opacity=".5"/>
+  <path d="M168 270 Q205 258 244 268" stroke="#b45309" stroke-width="3" stroke-linecap="round" opacity=".5"/>
+  <path d="M276 256 Q315 246 352 258" stroke="#b45309" stroke-width="3" stroke-linecap="round" opacity=".5"/>
+  <path d="M276 268 Q315 258 352 270" stroke="#b45309" stroke-width="3" stroke-linecap="round" opacity=".5"/>
+
+  <!-- student head + body behind book -->
+  <circle cx="260" cy="185" r="34" fill="#fde68a"/>
+  <path d="M226 185 a34 34 0 0 1 68 0 l-6 -26 a30 30 0 0 0 -56 0 Z" fill="#1f2937"/>
+  <path d="M212 254 q48 -34 96 0 l-6 12 q-42 -26 -84 0 Z" fill="#2563eb"/>
+
+  <!-- graduation cap floating -->
+  <g transform="translate(88 96) rotate(-12)">
+    <rect x="0" y="18" width="76" height="14" rx="7" fill="#111827"/>
+    <path d="M38 0 L84 20 L38 40 L-8 20 Z" fill="#1f2937"/>
+    <circle cx="38" cy="20" r="4" fill="#fbbf24"/>
+    <path d="M70 26 l0 22" stroke="#fbbf24" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="70" cy="52" r="5" fill="#fbbf24"/>
+  </g>
+
+  <!-- trophy -->
+  <g transform="translate(392 120)">
+    <rect x="16" y="52" width="28" height="10" rx="4" fill="#b45309"/>
+    <rect x="22" y="40" width="16" height="14" rx="3" fill="#f59e0b"/>
+    <path d="M8 6 h44 v14 a22 22 0 0 1 -44 0 Z" fill="#fbbf24"/>
+    <path d="M8 10 h-8 a10 12 0 0 0 12 16" stroke="#fbbf24" stroke-width="5" fill="none"/>
+    <path d="M52 10 h8 a10 12 0 0 1 -12 16" stroke="#fbbf24" stroke-width="5" fill="none"/>
+    <path d="M24 12 l6 -6 6 6 -6 6 Z" fill="#fff" opacity=".7"/>
+  </g>
+
+  <!-- floating pencil -->
+  <g transform="translate(70 210) rotate(24)">
+    <rect x="0" y="0" width="58" height="12" rx="3" fill="#f59e0b"/>
+    <path d="M58 0 l14 6 -14 6 Z" fill="#fde68a"/>
+    <path d="M68 3.5 l4 2.5 -4 2.5 Z" fill="#1f2937"/>
+    <rect x="-8" y="0" width="8" height="12" rx="3" fill="#f87171"/>
+  </g>
+
+  <!-- stars -->
+  <path d="M120 60 l4 9 9 4 -9 4 -4 9 -4 -9 -9 -4 9 -4 Z" fill="#fbbf24" opacity=".9"/>
+  <path d="M420 60 l3 7 7 3 -7 3 -3 7 -3 -7 -7 -3 7 -3 Z" fill="#ffffff" opacity=".7"/>
+  <path d="M448 220 l3 7 7 3 -7 3 -3 7 -3 -7 -7 -3 7 -3 Z" fill="#fbbf24" opacity=".8"/>
+  <circle cx="96" cy="150" r="5" fill="#ffffff" opacity=".5"/>
+  <circle cx="440" cy="180" r="6" fill="#ffffff" opacity=".4"/>
+  <circle cx="160" cy="112" r="4" fill="#ffffff" opacity=".5"/>
+</svg>
