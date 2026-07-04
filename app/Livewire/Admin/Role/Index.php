@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Admin\Role;
 
+use App\Models\Permission;
 use App\Models\Role;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -12,105 +13,114 @@ class Index extends Component
 
     public $search = '';
 
+    public $role_id;
     public $name;
-    public $slug;
-    public $description;
-    public $status = true;
+    public $selectedPermissions = [];
+    public $isEdit = false;
 
-    protected $rules = [
-        'name' => 'required|min:3|max:100',
-        'slug' => 'required|unique:roles,slug',
-        'description' => 'nullable',
-    ];
-
-    public function save()
-    {
-        $this->validate();
-
-        Role::create([
-            'name' => $this->name,
-            'slug' => $this->slug,
-            'description' => $this->description,
-            'status' => $this->status,
-        ]);
-
-        session()->flash('success', 'Role Created Successfully.');
-
-        $this->reset(['name', 'slug', 'description']);
-
-        $this->status = true;
-    }
+    /**
+     * Roles that ship with the system and cannot be renamed or deleted.
+     */
+    protected array $protectedRoles = ['super-admin', 'admin', 'accountant', 'teacher', 'student', 'parent'];
 
     public function updatingSearch()
     {
         $this->resetPage();
     }
 
-    public function render()
+    public function save()
     {
-        $roles = Role::where('name', 'like', '%' . $this->search . '%')
-            ->orWhere('slug', 'like', '%' . $this->search . '%')
-            ->latest()
-            ->paginate(10);
+        abort_unless(auth()->user()->can('roles.create'), 403);
 
-        return view('livewire.admin.role.index', compact('roles'))
-            ->layout('layouts.admin');
+        $this->validate([
+            'name' => 'required|min:3|max:100|unique:roles,name',
+        ]);
+
+        $role = Role::create(['name' => $this->name, 'guard_name' => 'web']);
+        $role->syncPermissions($this->selectedPermissions);
+
+        session()->flash('success', 'Role Created Successfully.');
+
+        $this->resetForm();
     }
-
-    public $role_id;
-    public $isEdit = false;
 
     public function edit($id)
     {
+        abort_unless(auth()->user()->can('roles.edit'), 403);
+
         $role = Role::findOrFail($id);
 
         $this->role_id = $role->id;
         $this->name = $role->name;
-        $this->slug = $role->slug;
-        $this->description = $role->description;
-        $this->status = $role->status;
-
+        $this->selectedPermissions = $role->permissions->pluck('name')->toArray();
         $this->isEdit = true;
     }
 
     public function update()
     {
+        abort_unless(auth()->user()->can('roles.edit'), 403);
+
         $this->validate([
-            'name' => 'required',
-            'slug' => 'required|unique:roles,slug,' . $this->role_id,
+            'name' => 'required|min:3|max:100|unique:roles,name,' . $this->role_id,
         ]);
 
         $role = Role::findOrFail($this->role_id);
 
-        $role->update([
-            'name' => $this->name,
-            'slug' => $this->slug,
-            'description' => $this->description,
-            'status' => $this->status,
-        ]);
+        if (! in_array($role->name, $this->protectedRoles)) {
+            $role->update(['name' => $this->name]);
+        }
+
+        // super-admin bypasses checks via Gate::before, no explicit grants needed
+        if ($role->name !== 'super-admin') {
+            $role->syncPermissions($this->selectedPermissions);
+        }
 
         session()->flash('success', 'Role Updated Successfully.');
 
         $this->resetForm();
     }
 
+    public function delete($id)
+    {
+        abort_unless(auth()->user()->can('roles.delete'), 403);
+
+        $role = Role::findOrFail($id);
+
+        if (in_array($role->name, $this->protectedRoles)) {
+            session()->flash('error', 'System roles cannot be deleted.');
+            return;
+        }
+
+        if ($role->users()->exists()) {
+            session()->flash('error', 'Role is assigned to users and cannot be deleted.');
+            return;
+        }
+
+        $role->delete();
+
+        session()->flash('success', 'Role Deleted Successfully');
+    }
+
     public function resetForm()
     {
-        $this->reset([
-            'role_id',
-            'name',
-            'slug',
-            'description',
-        ]);
-
-        $this->status = true;
+        $this->reset(['role_id', 'name', 'selectedPermissions']);
         $this->isEdit = false;
     }
 
-    public function delete($id)
-{
-    Role::findOrFail($id)->delete();
+    public function render()
+    {
+        $roles = Role::withCount(['users', 'permissions'])
+            ->where('name', 'like', '%' . $this->search . '%')
+            ->orderBy('name')
+            ->paginate(10);
 
-    session()->flash('success','Role Deleted Successfully');
-}
+        $permissionGroups = Permission::orderBy('module')->orderBy('name')
+            ->get()
+            ->groupBy('module');
+
+        return view('livewire.admin.role.index', [
+            'roles' => $roles,
+            'permissionGroups' => $permissionGroups,
+        ])->layout('layouts.admin');
+    }
 }

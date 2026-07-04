@@ -8,6 +8,13 @@
             </div>
         @endif
 
+        @if (session()->has('error'))
+            <div class="alert alert-danger alert-dismissible fade show">
+                {{ session('error') }}
+                <button class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        @endif
+
         <div class="card shadow">
 
             <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
@@ -97,6 +104,28 @@
                                             Delete
 
                                         </button>
+
+                                        @can('users.create')
+                                            @if ($student->user_id)
+                                                <span class="badge bg-success">Login ✓</span>
+                                            @else
+                                                <button class="btn btn-info btn-sm mt-1"
+                                                    wire:click="createLogin({{ $student->id }})"
+                                                    wire:confirm="Create a student portal login? Default password will be the mobile number.">
+                                                    Student Login
+                                                </button>
+                                            @endif
+
+                                            @if ($student->guardian_user_id)
+                                                <span class="badge bg-success">Parent ✓</span>
+                                            @else
+                                                <button class="btn btn-secondary btn-sm mt-1"
+                                                    wire:click="createGuardianLogin({{ $student->id }})"
+                                                    wire:confirm="Create a parent portal login using the guardian email?">
+                                                    Parent Login
+                                                </button>
+                                            @endif
+                                        @endcan
 
                                     </td>
 
@@ -343,6 +372,18 @@
                                 <label class="form-label">Mother Name</label>
 
                                 <input type="text" class="form-control" wire:model="mother_name">
+
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+
+                                <label class="form-label">Guardian Email (for parent portal)</label>
+
+                                <input type="email" class="form-control" wire:model="guardian_email">
+
+                                @error('guardian_email')
+                                    <small class="text-danger">{{ $message }}</small>
+                                @enderror
 
                             </div>
 

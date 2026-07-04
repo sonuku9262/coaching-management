@@ -9,12 +9,20 @@
         </div>
     @endif
 
+    @if(session()->has('error'))
+        <div class="alert alert-danger alert-dismissible fade show">
+            {{ session('error') }}
+            <button class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
+
     <div class="card shadow">
 
         <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
 
             <h4 class="mb-0">Role Management</h4>
 
+            @can('roles.create')
             <button
                 class="btn btn-light"
                 wire:click="resetForm"
@@ -24,6 +32,7 @@
                 + Add Role
 
             </button>
+            @endcan
 
         </div>
 
@@ -53,8 +62,8 @@
 
                             <th>ID</th>
                             <th>Role</th>
-                            <th>Slug</th>
-                            <th>Status</th>
+                            <th>Permissions</th>
+                            <th>Users</th>
                             <th width="180">Action</th>
 
                         </tr>
@@ -69,30 +78,28 @@
 
                                 <td>{{ $role->id }}</td>
 
-                                <td>{{ $role->name }}</td>
-
-                                <td>{{ $role->slug }}</td>
+                                <td>
+                                    {{ $role->name }}
+                                    @if($role->name === 'super-admin')
+                                        <span class="badge bg-dark">All Access</span>
+                                    @endif
+                                </td>
 
                                 <td>
-
-                                    @if($role->status)
-
-                                        <span class="badge bg-success">
-                                            Active
-                                        </span>
-
+                                    @if($role->name === 'super-admin')
+                                        <span class="badge bg-dark">*</span>
                                     @else
-
-                                        <span class="badge bg-danger">
-                                            Inactive
-                                        </span>
-
+                                        <span class="badge bg-info">{{ $role->permissions_count }}</span>
                                     @endif
+                                </td>
 
+                                <td>
+                                    <span class="badge bg-secondary">{{ $role->users_count }}</span>
                                 </td>
 
                                 <td>
 
+                                    @can('roles.edit')
                                     <button
                                         class="btn btn-warning btn-sm"
                                         wire:click="edit({{ $role->id }})"
@@ -102,14 +109,18 @@
                                         Edit
 
                                     </button>
+                                    @endcan
 
+                                    @can('roles.delete')
                                     <button
                                         class="btn btn-danger btn-sm"
-                                        wire:click="delete({{ $role->id }})">
+                                        wire:click="delete({{ $role->id }})"
+                                        wire:confirm="Are you sure you want to delete this role?">
 
                                         Delete
 
                                     </button>
+                                    @endcan
 
                                 </td>
 
@@ -155,11 +166,11 @@
     id="roleModal"
     tabindex="-1">
 
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-xl">
 
         <div class="modal-content">
 
-            <form wire:submit.prevent="save">
+            <form wire:submit.prevent="{{ $isEdit ? 'update' : 'save' }}">
 
                 <div class="modal-header bg-primary text-white">
 
@@ -194,31 +205,56 @@
 
                     </div>
 
-                    <div class="mb-3">
+                    <hr>
 
-                        <label>Slug</label>
+                    <h6 class="fw-bold">Permissions</h6>
 
-                        <input
-                            type="text"
-                            class="form-control"
-                            wire:model="slug">
+                    @if($isEdit && $name === 'super-admin')
 
-                        @error('slug')
-                            <small class="text-danger">{{ $message }}</small>
-                        @enderror
+                        <div class="alert alert-info mb-0">
+                            Super Admin automatically has every permission.
+                        </div>
 
-                    </div>
+                    @else
 
-                    <div class="mb-3">
+                        @foreach($permissionGroups as $module => $permissions)
 
-                        <label>Description</label>
+                            <div class="border rounded p-2 mb-2">
 
-                        <textarea
-                            class="form-control"
-                            rows="3"
-                            wire:model="description"></textarea>
+                                <div class="fw-bold text-primary mb-1">{{ $module }}</div>
 
-                    </div>
+                                <div class="row">
+
+                                    @foreach($permissions as $permission)
+
+                                        <div class="col-md-3">
+
+                                            <div class="form-check">
+
+                                                <input
+                                                    type="checkbox"
+                                                    class="form-check-input"
+                                                    id="perm-{{ $permission->id }}"
+                                                    value="{{ $permission->name }}"
+                                                    wire:model="selectedPermissions">
+
+                                                <label class="form-check-label" for="perm-{{ $permission->id }}">
+                                                    {{ $permission->name }}
+                                                </label>
+
+                                            </div>
+
+                                        </div>
+
+                                    @endforeach
+
+                                </div>
+
+                            </div>
+
+                        @endforeach
+
+                    @endif
 
                 </div>
 

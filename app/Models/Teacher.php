@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Teacher extends Model
 {
     protected $fillable = [
+        'user_id',
         'employee_id',
         'name',
         'mobile',
@@ -19,4 +20,14 @@ class Teacher extends Model
         'salary',
         'status',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function attendances()
+    {
+        return $this->hasMany(TeacherAttendance::class);
+    }
 }

@@ -14,6 +14,21 @@ class DashboardController extends Controller
 {
     public function index()
     {
+        $user = auth()->user();
+
+        // portal-only users land on their own dashboard
+        if ($user->hasRole('teacher')) {
+            return redirect()->route('teacher.dashboard');
+        }
+
+        if ($user->hasRole('student')) {
+            return redirect()->route('student.dashboard');
+        }
+
+        if ($user->hasRole('parent')) {
+            return redirect()->route('parent.dashboard');
+        }
+
         return view('dashboard', [
 
             'students' => StudentRegistration::count(),

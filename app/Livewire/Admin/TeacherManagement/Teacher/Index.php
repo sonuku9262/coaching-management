@@ -6,6 +6,7 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\WithFileUploads;
 use App\Models\Teacher;
+use App\Services\PortalAccountService;
 
 class Index extends Component
 {
@@ -39,6 +40,20 @@ class Index extends Component
     public function updatingSearch()
     {
         $this->resetPage();
+    }
+
+    public function createLogin($id, PortalAccountService $accounts)
+    {
+        abort_unless(auth()->user()->can('users.create'), 403);
+
+        $teacher = Teacher::findOrFail($id);
+
+        try {
+            $accounts->createTeacherLogin($teacher);
+            session()->flash('success', "Login created for {$teacher->name}. Default password is the mobile number.");
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            session()->flash('error', collect($e->errors())->flatten()->first());
+        }
     }
 
     public function save()

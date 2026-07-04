@@ -8,6 +8,13 @@
             </div>
         @endif
 
+        @if (session()->has('error'))
+            <div class="alert alert-danger alert-dismissible fade show">
+                {{ session('error') }}
+                <button class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        @endif
+
         <div class="card shadow">
 
             <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
@@ -108,6 +115,18 @@
                                             Delete
 
                                         </button>
+
+                                        @can('users.create')
+                                            @if ($teacher->user_id)
+                                                <span class="badge bg-success">Login ✓</span>
+                                            @else
+                                                <button class="btn btn-info btn-sm mt-1"
+                                                    wire:click="createLogin({{ $teacher->id }})"
+                                                    wire:confirm="Create a portal login for this teacher? Default password will be their mobile number.">
+                                                    Create Login
+                                                </button>
+                                            @endif
+                                        @endcan
 
                                     </td>
 

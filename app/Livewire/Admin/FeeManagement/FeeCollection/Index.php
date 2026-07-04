@@ -79,7 +79,7 @@ class Index extends Component
             $this->receipt_no = 'RCPT-' . date('Y') . '-' . str_pad($next, 5, '0', STR_PAD_LEFT);
         }
 
-        FeeCollection::updateOrCreate(
+        $feeCollection = FeeCollection::updateOrCreate(
 
             ['id' => $this->fee_collection_id],
 
@@ -112,6 +112,19 @@ class Index extends Component
             ]
 
         );
+
+        // email receipt to the student (and guardian) on a fresh collection
+        if ($feeCollection->wasRecentlyCreated) {
+            $feeCollection->load(['student', 'feeType']);
+
+            foreach (array_filter([
+                $feeCollection->student?->email,
+                $feeCollection->student?->guardian_email,
+            ]) as $email) {
+                \Illuminate\Support\Facades\Notification::route('mail', $email)
+                    ->notify(new \App\Notifications\FeePaymentReceived($feeCollection));
+            }
+        }
 
         session()->flash(
             'success',

@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
-use App\Livewire\Admin\Role\Index;
+use App\Livewire\Admin\Role\Index as RoleIndex;
 use App\Livewire\Admin\User\Index as UserIndex;
 use App\Livewire\Admin\MasterData\Course\Index as CourseIndex;
 use App\Livewire\Admin\MasterData\AcademicYear\Index as AcademicYearIndex;
@@ -17,9 +17,33 @@ use App\Livewire\Admin\FeeManagement\FeeStructure\Index as FeeStructureIndex;
 use App\Livewire\Admin\FeeManagement\FeeCollection\Index as FeeCollectionIndex;
 use App\Livewire\Admin\TeacherManagement\Teacher\Index as TeacherIndex;
 use App\Livewire\Admin\Permission\Index as PermissionIndex;
+use App\Livewire\Admin\Attendance\StudentAttendance\Index as StudentAttendanceIndex;
+use App\Livewire\Admin\Attendance\TeacherAttendance\Index as TeacherAttendanceIndex;
+use App\Livewire\Admin\Examination\Exam\Index as ExamIndex;
+use App\Livewire\Admin\Examination\Result\Index as ExamResultIndex;
+use App\Livewire\Admin\Reports\FeeReport;
+use App\Livewire\Admin\Reports\AttendanceReport;
+use App\Livewire\Portal\Teacher\Dashboard as TeacherDashboard;
+use App\Livewire\Portal\Student\Dashboard as StudentDashboard;
+use App\Livewire\Portal\ParentPortal\Dashboard as ParentDashboard;
 
+/*
+|--------------------------------------------------------------------------
+| Public / Frontend
+|--------------------------------------------------------------------------
+*/
 
-Route::view('/', 'welcome');
+Route::view('/', 'frontend.home')->name('home');
+Route::view('/about', 'frontend.about');
+Route::view('/courses', 'frontend.courses');
+Route::view('/gallery', 'frontend.gallery');
+Route::view('/contact', 'frontend.contact');
+
+/*
+|--------------------------------------------------------------------------
+| Authenticated
+|--------------------------------------------------------------------------
+*/
 
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'verified'])
@@ -29,64 +53,124 @@ Route::view('profile', 'profile')
     ->middleware(['auth'])
     ->name('profile');
 
-Route::middleware(['auth'])->group(function () {
+/*
+|--------------------------------------------------------------------------
+| Portals (role protected)
+|--------------------------------------------------------------------------
+*/
 
-    Route::get('/roles', Index::class)->name('roles.index');
-    Route::get('/users', UserIndex::class)->name('users.index');
-
-
-
+Route::middleware(['auth', 'role:teacher'])->group(function () {
+    Route::get('/teacher/dashboard', TeacherDashboard::class)->name('teacher.dashboard');
 });
 
-Route::middleware(['auth'])->prefix('admin')->group(function () {
+Route::middleware(['auth', 'role:student'])->group(function () {
+    Route::get('/student/dashboard', StudentDashboard::class)->name('student.dashboard');
+});
 
-     Route::get('/courses', CourseIndex::class)
-        ->name('admin.courses.index');
+Route::middleware(['auth', 'role:parent'])->group(function () {
+    Route::get('/parent/dashboard', ParentDashboard::class)->name('parent.dashboard');
+});
 
-     Route::get('/academic-years', AcademicYearIndex::class)
-        ->name('admin.academic-years.index');
+/*
+|--------------------------------------------------------------------------
+| Admin panel (permission protected)
+|--------------------------------------------------------------------------
+*/
 
-     Route::get('/academic-sessions', AcademicSessionIndex::class)
-        ->name('admin.academic-sessions.index');
+Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
 
-     Route::get('/subjects', SubjectIndex::class)
-        ->name('admin.subjects.index');
+    // User Management
+    Route::get('/roles', RoleIndex::class)
+        ->middleware('permission:roles.view')
+        ->name('roles.index');
 
-     Route::get('/batches', BatchIndex::class)
-        ->name('admin.batches.index');
-
-    Route::get('/classrooms', ClassroomIndex::class)
-    ->name('admin.classrooms.index');
-
-    Route::get('/shifts', ShiftIndex::class)
-    ->name('admin.shifts.index');
-
-     Route::get('/student-registrations', StudentRegistrationIndex::class)
-        ->name('admin.student-registrations.index');
-
-     Route::get('/fee-types', FeeTypeIndex::class)
-        ->name('admin.fee-types.index');
-
-    Route::get('/fee-structures', FeeStructureIndex::class)
-    ->name('admin.fee-structures.index');
-
-    Route::get('/fee-collections', FeeCollectionIndex::class)
-    ->name('admin.fee-collections.index');
-
-    Route::get('/teachers', TeacherIndex::class)
-        ->name('admin.teachers.index');
+    Route::get('/users', UserIndex::class)
+        ->middleware('permission:users.view')
+        ->name('users.index');
 
     Route::get('/permissions', PermissionIndex::class)
-    ->name('admin.permissions.index');
+        ->middleware('permission:permissions.view')
+        ->name('permissions.index');
+
+    // Master Data
+    Route::get('/academic-years', AcademicYearIndex::class)
+        ->middleware('permission:academic-years.view')
+        ->name('academic-years.index');
+
+    Route::get('/academic-sessions', AcademicSessionIndex::class)
+        ->middleware('permission:academic-sessions.view')
+        ->name('academic-sessions.index');
+
+    Route::get('/courses', CourseIndex::class)
+        ->middleware('permission:courses.view')
+        ->name('courses.index');
+
+    Route::get('/subjects', SubjectIndex::class)
+        ->middleware('permission:subjects.view')
+        ->name('subjects.index');
+
+    Route::get('/batches', BatchIndex::class)
+        ->middleware('permission:batches.view')
+        ->name('batches.index');
+
+    Route::get('/classrooms', ClassroomIndex::class)
+        ->middleware('permission:classrooms.view')
+        ->name('classrooms.index');
+
+    Route::get('/shifts', ShiftIndex::class)
+        ->middleware('permission:shifts.view')
+        ->name('shifts.index');
+
+    // Student Management
+    Route::get('/student-registrations', StudentRegistrationIndex::class)
+        ->middleware('permission:students.view')
+        ->name('student-registrations.index');
+
+    // Teacher Management
+    Route::get('/teachers', TeacherIndex::class)
+        ->middleware('permission:teachers.view')
+        ->name('teachers.index');
+
+    // Fee Management
+    Route::get('/fee-types', FeeTypeIndex::class)
+        ->middleware('permission:fee-types.view')
+        ->name('fee-types.index');
+
+    Route::get('/fee-structures', FeeStructureIndex::class)
+        ->middleware('permission:fee-structures.view')
+        ->name('fee-structures.index');
+
+    Route::get('/fee-collections', FeeCollectionIndex::class)
+        ->middleware('permission:fee-collections.view')
+        ->name('fee-collections.index');
+
+    // Examination
+    Route::get('/exams', ExamIndex::class)
+        ->middleware('permission:exams.view')
+        ->name('exams.index');
+
+    Route::get('/exam-results', ExamResultIndex::class)
+        ->middleware('permission:exam-results.view')
+        ->name('exam-results.index');
+
+    // Attendance
+    Route::get('/student-attendance', StudentAttendanceIndex::class)
+        ->middleware('permission:student-attendance.view')
+        ->name('student-attendance.index');
+
+    Route::get('/teacher-attendance', TeacherAttendanceIndex::class)
+        ->middleware('permission:teacher-attendance.view')
+        ->name('teacher-attendance.index');
+
+    // Reports
+    Route::get('/reports/fees', FeeReport::class)
+        ->middleware('permission:reports.view')
+        ->name('reports.fees');
+
+    Route::get('/reports/attendance', AttendanceReport::class)
+        ->middleware('permission:reports.view')
+        ->name('reports.attendance');
 
 });
-
-
-Route::view('/', 'frontend.home')->name('home');
-Route::view('/about', 'frontend.about');
-Route::view('/courses', 'frontend.courses');
-Route::view('/gallery', 'frontend.gallery');
-Route::view('/contact', 'frontend.contact');
-
 
 require __DIR__ . '/auth.php';

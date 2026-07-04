@@ -13,6 +13,7 @@ use App\Models\Classroom;
 use App\Models\Shift;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Storage;
+use App\Services\PortalAccountService;
 
 class Index extends Component
 {
@@ -35,6 +36,8 @@ class Index extends Component
     public $name;
     public $father_name;
     public $mother_name;
+    public $guardian_email;
+    public $old_photo;
 
     public $gender = 'Male';
 
@@ -67,6 +70,8 @@ class Index extends Component
 
         'father_name' => 'required',
 
+        'guardian_email' => 'nullable|email',
+
         'mobile' => 'required',
 
         'dob' => 'required',
@@ -92,7 +97,7 @@ class Index extends Component
             $this->admission_no = 'ADM-' . date('Y') . '-' . str_pad($nextId, 4, '0', STR_PAD_LEFT);
         }
 
-        $photoPath = null;
+        $photoPath = $this->old_photo;
 
         if ($this->photo) {
             $photoPath = $this->photo->store('students', 'public');
@@ -123,6 +128,8 @@ class Index extends Component
                 'father_name' => $this->father_name,
 
                 'mother_name' => $this->mother_name,
+
+                'guardian_email' => $this->guardian_email,
 
                 'gender' => $this->gender,
 
@@ -180,6 +187,10 @@ class Index extends Component
 
         $this->mother_name = $student->mother_name;
 
+        $this->guardian_email = $student->guardian_email;
+
+        $this->old_photo = $student->photo;
+
         $this->gender = $student->gender;
 
         $this->dob = $student->dob;
@@ -193,6 +204,34 @@ class Index extends Component
         $this->admission_date = $student->admission_date;
 
         $this->status = $student->status;
+    }
+
+    public function createLogin($id, PortalAccountService $accounts)
+    {
+        abort_unless(auth()->user()->can('users.create'), 403);
+
+        $student = StudentRegistration::findOrFail($id);
+
+        try {
+            $accounts->createStudentLogin($student);
+            session()->flash('success', "Login created for {$student->name}. Default password is the mobile number.");
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            session()->flash('error', collect($e->errors())->flatten()->first());
+        }
+    }
+
+    public function createGuardianLogin($id, PortalAccountService $accounts)
+    {
+        abort_unless(auth()->user()->can('users.create'), 403);
+
+        $student = StudentRegistration::findOrFail($id);
+
+        try {
+            $accounts->createGuardianLogin($student);
+            session()->flash('success', "Guardian login created for {$student->name}'s parent. Default password is the student's mobile number.");
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            session()->flash('error', collect($e->errors())->flatten()->first());
+        }
     }
 
     public function delete($id)
@@ -237,6 +276,10 @@ class Index extends Component
             'father_name',
 
             'mother_name',
+
+            'guardian_email',
+
+            'old_photo',
 
             'gender',
 

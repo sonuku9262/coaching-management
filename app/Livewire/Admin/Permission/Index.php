@@ -14,15 +14,7 @@ class Index extends Component
 
     public $permission_id;
     public $name;
-    public $slug;
     public $module;
-    public $status = true;
-
-    protected $rules = [
-        'name'   => 'required|min:3',
-        'slug'   => 'required',
-        'module' => 'required',
-    ];
 
     public function updatingSearch()
     {
@@ -31,22 +23,23 @@ class Index extends Component
 
     public function save()
     {
-        $this->validate();
+        abort_unless(auth()->user()->can($this->permission_id ? 'permissions.edit' : 'permissions.create'), 403);
+
+        $this->validate([
+            'name'   => 'required|min:3|unique:permissions,name,' . ($this->permission_id ?? 'NULL'),
+            'module' => 'required',
+        ]);
 
         Permission::updateOrCreate(
-
             ['id' => $this->permission_id],
-
             [
-
-                'name'   => $this->name,
-                'slug'   => $this->slug,
-                'module' => $this->module,
-                'status' => $this->status,
-
-            ]
-
+                'name'       => $this->name,
+                'guard_name' => 'web',
+                'module'     => $this->module,
+            ],
         );
+
+        app(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
 
         session()->flash(
             'success',
@@ -60,18 +53,22 @@ class Index extends Component
 
     public function edit($id)
     {
+        abort_unless(auth()->user()->can('permissions.edit'), 403);
+
         $permission = Permission::findOrFail($id);
 
         $this->permission_id = $permission->id;
         $this->name = $permission->name;
-        $this->slug = $permission->slug;
         $this->module = $permission->module;
-        $this->status = $permission->status;
     }
 
     public function delete($id)
     {
+        abort_unless(auth()->user()->can('permissions.delete'), 403);
+
         Permission::findOrFail($id)->delete();
+
+        app(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
 
         session()->flash(
             'success',
@@ -84,11 +81,8 @@ class Index extends Component
         $this->reset([
             'permission_id',
             'name',
-            'slug',
             'module',
         ]);
-
-        $this->status = true;
     }
 
     public function render()
@@ -98,8 +92,13 @@ class Index extends Component
             [
                 'permissions' => Permission::where('name', 'like', '%' . $this->search . '%')
                     ->orWhere('module', 'like', '%' . $this->search . '%')
-                    ->latest()
-                    ->paginate(10),
+                    ->orderBy('module')
+                    ->orderBy('name')
+                    ->paginate(15),
+                'modules' => Permission::whereNotNull('module')
+                    ->distinct()
+                    ->orderBy('module')
+                    ->pluck('module'),
             ]
         )->layout('layouts.admin');
     }

@@ -8,6 +8,12 @@ class StudentRegistration extends Model
 {
     protected $fillable = [
 
+        'user_id',
+
+        'guardian_email',
+
+        'guardian_user_id',
+
         'admission_no',
 
         'academic_year_id',
@@ -74,5 +80,30 @@ class StudentRegistration extends Model
     public function shift()
     {
         return $this->belongsTo(Shift::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function guardian()
+    {
+        return $this->belongsTo(User::class, 'guardian_user_id');
+    }
+
+    public function attendances()
+    {
+        return $this->hasMany(StudentAttendance::class);
+    }
+
+    public function feeCollections()
+    {
+        return $this->hasMany(FeeCollection::class);
+    }
+
+    public function examResults()
+    {
+        return $this->hasMany(ExamResult::class);
     }
 }
