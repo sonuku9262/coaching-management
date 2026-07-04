@@ -1,7 +1,10 @@
 <div class="col-md-2 bg-white border-end min-vh-100 shadow-sm p-0">
 
     <div class="text-center py-3 bg-primary text-white border-bottom">
-        <h5 class="mb-0 fw-bold">Coaching ERP</h5>
+        @if(\App\Models\Setting::get('institute_logo'))
+            <img src="{{ asset('storage/' . \App\Models\Setting::get('institute_logo')) }}" height="36" class="mb-1 bg-white rounded p-1">
+        @endif
+        <h5 class="mb-0 fw-bold">{{ \App\Models\Setting::get('institute_name', 'Coaching ERP') }}</h5>
     </div>
 
     <div class="p-2">
@@ -216,6 +219,11 @@
             class="nav-link ps-3 {{ request()->is('admin/exam-results*') ? 'text-primary fw-bold' : 'text-dark' }}">
             • Marks Entry
         </a>
+
+        <a href="/admin/exam-report-card"
+            class="nav-link ps-3 {{ request()->is('admin/exam-report-card*') ? 'text-primary fw-bold' : 'text-dark' }}">
+            • Report Card
+        </a>
         @endcan
         @endcanany
 
@@ -236,14 +244,35 @@
             class="nav-link ps-3 {{ request()->is('admin/reports/attendance*') ? 'text-primary fw-bold' : 'text-dark' }}">
             • Attendance
         </a>
-        @endcan
 
-        @can('settings.view')
-        <!-- Settings -->
-        <a href="#" class="nav-link text-dark">
-            ⚙️ Settings
+        <a href="/admin/reports/dues"
+            class="nav-link ps-3 {{ request()->is('admin/reports/dues*') ? 'text-primary fw-bold' : 'text-dark' }}">
+            • Fee Dues
         </a>
         @endcan
+
+        @canany(['settings.view', 'activity-logs.view'])
+        <hr>
+
+        <!-- Settings -->
+        <h6 class="text-primary fw-bold mt-3 mb-2">
+            System
+        </h6>
+
+        @can('settings.view')
+        <a href="/admin/settings"
+            class="nav-link ps-3 {{ request()->is('admin/settings*') ? 'text-primary fw-bold' : 'text-dark' }}">
+            • Settings
+        </a>
+        @endcan
+
+        @can('activity-logs.view')
+        <a href="/admin/activity-log"
+            class="nav-link ps-3 {{ request()->is('admin/activity-log*') ? 'text-primary fw-bold' : 'text-dark' }}">
+            • Activity Log
+        </a>
+        @endcan
+        @endcanany
 
     </div>
 

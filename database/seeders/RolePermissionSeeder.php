@@ -24,7 +24,7 @@ class RolePermissionSeeder extends Seeder
         'Attendance' => ['student-attendance', 'teacher-attendance'],
         'Examination' => ['exams', 'exam-results'],
         'Reports' => ['reports'],
-        'Settings' => ['settings'],
+        'Settings' => ['settings', 'activity-logs'],
     ];
 
     protected array $actions = ['view', 'create', 'edit', 'delete'];

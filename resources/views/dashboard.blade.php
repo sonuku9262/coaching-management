@@ -90,6 +90,46 @@
 
     <div class="row">
 
+        <div class="col-md-3 mb-4">
+            <div class="card border-0 shadow bg-danger text-white">
+                <div class="card-body">
+                    <h6>Total Dues</h6>
+                    <h3>₹ {{ number_format($totalDues,2) }}</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-4">
+            <div class="card border-0 shadow bg-success text-white">
+                <div class="card-body">
+                    <h6>Present Today</h6>
+                    <h2>{{ $todayPresent }}</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-4">
+            <div class="card border-0 shadow bg-warning text-dark">
+                <div class="card-body">
+                    <h6>Absent Today</h6>
+                    <h2>{{ $todayAbsent }}</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-4">
+            <div class="card border-0 shadow bg-info text-white">
+                <div class="card-body">
+                    <h6>Active Exams</h6>
+                    <h2>{{ $activeExams }}</h2>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row">
+
         <div class="col-md-6">
 
             <div class="card shadow">

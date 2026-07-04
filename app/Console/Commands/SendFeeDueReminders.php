@@ -17,7 +17,7 @@ class SendFeeDueReminders extends Command
     {
         $students = StudentRegistration::where('status', 1)
             ->withSum('feeCollections as outstanding_balance', 'balance')
-            ->having('outstanding_balance', '>', 0)
+            ->whereRaw('(select coalesce(sum(balance), 0) from fee_collections where fee_collections.student_registration_id = student_registrations.id) > 0')
             ->get();
 
         $sent = 0;

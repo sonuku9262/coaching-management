@@ -23,6 +23,10 @@ use App\Livewire\Admin\Examination\Exam\Index as ExamIndex;
 use App\Livewire\Admin\Examination\Result\Index as ExamResultIndex;
 use App\Livewire\Admin\Reports\FeeReport;
 use App\Livewire\Admin\Reports\AttendanceReport;
+use App\Livewire\Admin\Reports\DuesReport;
+use App\Livewire\Admin\Settings\Index as SettingsIndex;
+use App\Livewire\Admin\ActivityLog\Index as ActivityLogIndex;
+use App\Livewire\Admin\Examination\ReportCard;
 use App\Livewire\Portal\Teacher\Dashboard as TeacherDashboard;
 use App\Livewire\Portal\Student\Dashboard as StudentDashboard;
 use App\Livewire\Portal\ParentPortal\Dashboard as ParentDashboard;
@@ -52,6 +56,12 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
 Route::view('profile', 'profile')
     ->middleware(['auth'])
     ->name('profile');
+
+Route::post('logout', function (\App\Livewire\Actions\Logout $logout) {
+    $logout();
+
+    return redirect('/');
+})->middleware(['auth'])->name('logout');
 
 /*
 |--------------------------------------------------------------------------
@@ -170,6 +180,25 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::get('/reports/attendance', AttendanceReport::class)
         ->middleware('permission:reports.view')
         ->name('reports.attendance');
+
+    Route::get('/reports/dues', DuesReport::class)
+        ->middleware('permission:reports.view')
+        ->name('reports.dues');
+
+    // Report Card
+    Route::get('/exam-report-card', ReportCard::class)
+        ->middleware('permission:exam-results.view')
+        ->name('exam-report-card');
+
+    // Settings
+    Route::get('/settings', SettingsIndex::class)
+        ->middleware('permission:settings.view')
+        ->name('settings.index');
+
+    // Activity Log
+    Route::get('/activity-log', ActivityLogIndex::class)
+        ->middleware('permission:activity-logs.view')
+        ->name('activity-log.index');
 
 });
 

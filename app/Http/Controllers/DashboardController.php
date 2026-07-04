@@ -9,6 +9,8 @@ use App\Models\Batch;
 use App\Models\Teacher;
 use App\Models\StudentRegistration;
 use App\Models\FeeCollection;
+use App\Models\StudentAttendance;
+use App\Models\Exam;
 
 class DashboardController extends Controller
 {
@@ -47,6 +49,18 @@ class DashboardController extends Controller
                 ->sum('paid_amount'),
 
             'totalCollection' => FeeCollection::sum('paid_amount'),
+
+            'totalDues' => FeeCollection::sum('balance'),
+
+            'todayPresent' => StudentAttendance::whereDate('attendance_date', today())
+                ->where('status', 'Present')
+                ->count(),
+
+            'todayAbsent' => StudentAttendance::whereDate('attendance_date', today())
+                ->where('status', 'Absent')
+                ->count(),
+
+            'activeExams' => Exam::where('status', true)->count(),
 
             'recentStudents' => StudentRegistration::latest()
                 ->take(5)

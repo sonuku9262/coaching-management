@@ -36,6 +36,10 @@ test('a super admin can view every admin page', function () {
     $this->actingAs($user)->get('/admin/roles')->assertOk();
     $this->actingAs($user)->get('/admin/users')->assertOk();
     $this->actingAs($user)->get('/admin/courses')->assertOk();
+    $this->actingAs($user)->get('/admin/settings')->assertOk();
+    $this->actingAs($user)->get('/admin/activity-log')->assertOk();
+    $this->actingAs($user)->get('/admin/reports/dues')->assertOk();
+    $this->actingAs($user)->get('/admin/exam-report-card')->assertOk();
 });
 
 test('an accountant can view fees but not user management', function () {
