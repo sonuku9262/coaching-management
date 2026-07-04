@@ -54,6 +54,12 @@
 
     @include('partials.navbar')
 
+    @if(session('info'))
+        <div class="alert alert-warning text-center mb-0 rounded-0">
+            {{ session('info') }}
+        </div>
+    @endif
+
     <main>
         @yield('content')
     </main>

@@ -20,7 +20,11 @@ new #[Layout('layouts.guest')] class extends Component
 
         Session::regenerate();
 
-        $this->redirectIntended(default: route('dashboard', absolute: false), navigate: true);
+        // land every role directly on its own dashboard
+        $this->redirectIntended(
+            default: route(auth()->user()->dashboardRoute(), absolute: false),
+            navigate: true,
+        );
     }
 }; ?>
 

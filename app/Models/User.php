@@ -43,6 +43,34 @@ class User extends Authenticatable
         ];
     }
 
+    /**
+     * The route this user should land on after login, by role priority.
+     * Multi-role users go to the highest-privilege dashboard; users with
+     * no role yet are sent to the public site.
+     */
+    public function dashboardRoute(): string
+    {
+        if ($this->hasAnyRole(['super-admin', 'admin', 'accountant'])) {
+            return 'dashboard';
+        }
+
+        if ($this->hasRole('teacher')) {
+            return 'teacher.dashboard';
+        }
+
+        if ($this->hasRole('student')) {
+            return 'student.dashboard';
+        }
+
+        if ($this->hasRole('parent')) {
+            return 'parent.dashboard';
+        }
+
+        // custom roles created by the admin use the admin dashboard;
+        // users with no role are parked on the public site
+        return $this->roles->isNotEmpty() ? 'dashboard' : 'home';
+    }
+
     public function teacher()
     {
         return $this->hasOne(Teacher::class);

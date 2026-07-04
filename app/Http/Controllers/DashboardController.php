@@ -18,17 +18,17 @@ class DashboardController extends Controller
     {
         $user = auth()->user();
 
-        // portal-only users land on their own dashboard
-        if ($user->hasRole('teacher')) {
-            return redirect()->route('teacher.dashboard');
+        $route = $user->dashboardRoute();
+
+        // users without any role wait for the admin to assign one
+        if ($route === 'home') {
+            return redirect()->route('home')
+                ->with('info', 'Aapka account abhi approve nahi hua hai. Institute se sampark karein.');
         }
 
-        if ($user->hasRole('student')) {
-            return redirect()->route('student.dashboard');
-        }
-
-        if ($user->hasRole('parent')) {
-            return redirect()->route('parent.dashboard');
+        // portal roles land on their own dashboard
+        if ($route !== 'dashboard') {
+            return redirect()->route($route);
         }
 
         return view('dashboard', [

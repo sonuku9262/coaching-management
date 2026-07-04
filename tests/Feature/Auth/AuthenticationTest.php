@@ -20,9 +20,10 @@ test('users can authenticate using the login screen', function () {
 
     $component->call('login');
 
+    // a user without any role is parked on the public site after login
     $component
         ->assertHasNoErrors()
-        ->assertRedirect(route('dashboard', absolute: false));
+        ->assertRedirect(route('home', absolute: false));
 
     $this->assertAuthenticated();
 });
@@ -43,8 +44,11 @@ test('users can not authenticate with invalid password', function () {
     $this->assertGuest();
 });
 
-test('dashboard can be rendered', function () {
+test('dashboard can be rendered for admin users', function () {
+    $this->seed(\Database\Seeders\RolePermissionSeeder::class);
+
     $user = User::factory()->create();
+    $user->assignRole('admin');
 
     $this->actingAs($user);
 

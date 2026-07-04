@@ -38,6 +38,17 @@ class LoginForm extends Form
             ]);
         }
 
+        // deactivated accounts cannot log in
+        if (! Auth::user()->status) {
+            Auth::logout();
+
+            RateLimiter::hit($this->throttleKey());
+
+            throw ValidationException::withMessages([
+                'form.email' => 'Your account has been deactivated. Please contact the institute.',
+            ]);
+        }
+
         RateLimiter::clear($this->throttleKey());
     }
 
