@@ -27,6 +27,16 @@ class Index extends Component
     public $youtube_url;
     public $whatsapp_number;
 
+    // payment gateway
+    public $razorpay_enabled = false;
+    public $razorpay_key_id;
+    public $razorpay_key_secret;
+
+    // sms / whatsapp
+    public $sms_enabled = false;
+    public $msg91_auth_key;
+    public $msg91_sender_id;
+
     public function mount()
     {
         $this->institute_name = Setting::get('institute_name');
@@ -43,6 +53,14 @@ class Index extends Component
         $this->instagram_url = Setting::get('instagram_url');
         $this->youtube_url = Setting::get('youtube_url');
         $this->whatsapp_number = Setting::get('whatsapp_number');
+
+        $this->razorpay_enabled = (bool) Setting::get('razorpay_enabled', false);
+        $this->razorpay_key_id = Setting::get('razorpay_key_id');
+        $this->razorpay_key_secret = Setting::get('razorpay_key_secret');
+
+        $this->sms_enabled = (bool) Setting::get('sms_enabled', false);
+        $this->msg91_auth_key = Setting::get('msg91_auth_key');
+        $this->msg91_sender_id = Setting::get('msg91_sender_id');
     }
 
     public function save()
@@ -68,6 +86,14 @@ class Index extends Component
         Setting::set('instagram_url', $this->instagram_url);
         Setting::set('youtube_url', $this->youtube_url);
         Setting::set('whatsapp_number', $this->whatsapp_number);
+
+        Setting::set('razorpay_enabled', $this->razorpay_enabled ? '1' : '0');
+        Setting::set('razorpay_key_id', $this->razorpay_key_id);
+        Setting::set('razorpay_key_secret', $this->razorpay_key_secret);
+
+        Setting::set('sms_enabled', $this->sms_enabled ? '1' : '0');
+        Setting::set('msg91_auth_key', $this->msg91_auth_key);
+        Setting::set('msg91_sender_id', $this->msg91_sender_id);
 
         if ($this->logo) {
             $this->current_logo = $this->logo->store('settings', 'public');

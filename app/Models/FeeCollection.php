@@ -27,6 +27,8 @@ class FeeCollection extends Model
         'paid_amount',
         'balance',
         'payment_mode',
+        'gateway_order_id',
+        'gateway_payment_id',
         'receipt_no',
         'payment_date',
         'remarks',

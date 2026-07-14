@@ -25,16 +25,37 @@ use App\Livewire\Admin\Examination\Result\Index as ExamResultIndex;
 use App\Livewire\Admin\Reports\FeeReport;
 use App\Livewire\Admin\Reports\AttendanceReport;
 use App\Livewire\Admin\Reports\DuesReport;
+use App\Livewire\Admin\Reports\ProfitLossReport;
+use App\Livewire\Admin\ExpenseManagement\ExpenseCategory\Index as ExpenseCategoryIndex;
+use App\Livewire\Admin\ExpenseManagement\Expense\Index as ExpenseIndex;
+use App\Livewire\Admin\ExpenseManagement\SalaryPayment\Index as SalaryPaymentIndex;
 use App\Livewire\Admin\Settings\Index as SettingsIndex;
 use App\Livewire\Admin\ActivityLog\Index as ActivityLogIndex;
 use App\Livewire\Admin\Examination\ReportCard;
+use App\Livewire\Admin\Examination\AdmitCard;
+use App\Livewire\Admin\IdCard\Index as IdCardIndex;
 use App\Livewire\Admin\Enquiry\Index as EnquiryIndex;
 use App\Livewire\Admin\Website\Gallery\Index as GalleryIndex;
 use App\Livewire\Admin\Website\Testimonial\Index as TestimonialIndex;
 use App\Livewire\Admin\Website\Notice\Index as NoticeIndex;
+use App\Livewire\Admin\Timetable\Index as TimetableIndex;
+use App\Livewire\Admin\Academics\StudyMaterial\Index as StudyMaterialIndex;
+use App\Livewire\Admin\Academics\Homework\Index as HomeworkIndex;
 use App\Livewire\Portal\Teacher\Dashboard as TeacherDashboard;
+use App\Livewire\Portal\Teacher\MyBatches as TeacherMyBatches;
+use App\Livewire\Portal\Teacher\Attendance as TeacherAttendance;
+use App\Livewire\Portal\Teacher\Marks as TeacherMarks;
+use App\Livewire\Portal\Teacher\Timetable as TeacherTimetable;
+use App\Livewire\Portal\Teacher\StudyMaterial as TeacherStudyMaterial;
+use App\Livewire\Portal\Teacher\Homework as TeacherHomework;
+use App\Livewire\Portal\Student\Timetable as StudentTimetable;
+use App\Livewire\Portal\Student\StudyMaterial as StudentStudyMaterial;
+use App\Livewire\Portal\Student\Homework as StudentHomework;
 use App\Livewire\Portal\Student\Dashboard as StudentDashboard;
 use App\Livewire\Portal\ParentPortal\Dashboard as ParentDashboard;
+use App\Livewire\Portal\ParentPortal\Attendance as ParentAttendance;
+use App\Livewire\Portal\ParentPortal\Fees as ParentFees;
+use App\Livewire\Portal\ParentPortal\Results as ParentResults;
 
 /*
 |--------------------------------------------------------------------------
@@ -78,8 +99,14 @@ Route::post('logout', function (\App\Livewire\Actions\Logout $logout) {
 |--------------------------------------------------------------------------
 */
 
-Route::middleware(['auth', 'role:teacher'])->group(function () {
-    Route::get('/teacher/dashboard', TeacherDashboard::class)->name('teacher.dashboard');
+Route::middleware(['auth', 'role:teacher'])->prefix('teacher')->name('teacher.')->group(function () {
+    Route::get('/dashboard', TeacherDashboard::class)->name('dashboard');
+    Route::get('/batches', TeacherMyBatches::class)->name('batches');
+    Route::get('/attendance', TeacherAttendance::class)->name('attendance');
+    Route::get('/marks', TeacherMarks::class)->name('marks');
+    Route::get('/timetable', TeacherTimetable::class)->name('timetable');
+    Route::get('/study-material', TeacherStudyMaterial::class)->name('study-material');
+    Route::get('/homework', TeacherHomework::class)->name('homework');
 });
 
 Route::middleware(['auth', 'role:student'])->prefix('student')->name('student.')->group(function () {
@@ -87,10 +114,16 @@ Route::middleware(['auth', 'role:student'])->prefix('student')->name('student.')
     Route::get('/attendance', \App\Livewire\Portal\Student\Attendance::class)->name('attendance');
     Route::get('/fees', \App\Livewire\Portal\Student\Fees::class)->name('fees');
     Route::get('/results', \App\Livewire\Portal\Student\Results::class)->name('results');
+    Route::get('/timetable', StudentTimetable::class)->name('timetable');
+    Route::get('/study-material', StudentStudyMaterial::class)->name('study-material');
+    Route::get('/homework', StudentHomework::class)->name('homework');
 });
 
-Route::middleware(['auth', 'role:parent'])->group(function () {
-    Route::get('/parent/dashboard', ParentDashboard::class)->name('parent.dashboard');
+Route::middleware(['auth', 'role:parent'])->prefix('parent')->name('parent.')->group(function () {
+    Route::get('/dashboard', ParentDashboard::class)->name('dashboard');
+    Route::get('/attendance', ParentAttendance::class)->name('attendance');
+    Route::get('/fees', ParentFees::class)->name('fees');
+    Route::get('/results', ParentResults::class)->name('results');
 });
 
 /*
@@ -113,6 +146,20 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::get('/permissions', PermissionIndex::class)
         ->middleware('permission:permissions.view')
         ->name('permissions.index');
+
+    // Timetable
+    Route::get('/timetable', TimetableIndex::class)
+        ->middleware('permission:timetables.view')
+        ->name('timetable.index');
+
+    // Academics
+    Route::get('/study-material', StudyMaterialIndex::class)
+        ->middleware('permission:study-materials.view')
+        ->name('study-material.index');
+
+    Route::get('/homework', HomeworkIndex::class)
+        ->middleware('permission:homework.view')
+        ->name('homework.index');
 
     // Master Data
     Route::get('/academic-years', AcademicYearIndex::class)
@@ -152,6 +199,10 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
         ->middleware('permission:enquiries.view')
         ->name('enquiries.index');
 
+    Route::get('/id-cards', IdCardIndex::class)
+        ->middleware('permission:students.view')
+        ->name('id-cards.index');
+
     // Teacher Management
     Route::get('/teachers', TeacherIndex::class)
         ->middleware('permission:teachers.view')
@@ -169,6 +220,19 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::get('/fee-collections', FeeCollectionIndex::class)
         ->middleware('permission:fee-collections.view')
         ->name('fee-collections.index');
+
+    // Expense Management
+    Route::get('/expense-categories', ExpenseCategoryIndex::class)
+        ->middleware('permission:expense-categories.view')
+        ->name('expense-categories.index');
+
+    Route::get('/expenses', ExpenseIndex::class)
+        ->middleware('permission:expenses.view')
+        ->name('expenses.index');
+
+    Route::get('/salary-payments', SalaryPaymentIndex::class)
+        ->middleware('permission:salary-payments.view')
+        ->name('salary-payments.index');
 
     // Examination
     Route::get('/exams', ExamIndex::class)
@@ -201,10 +265,18 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
         ->middleware('permission:reports.view')
         ->name('reports.dues');
 
+    Route::get('/reports/profit-loss', ProfitLossReport::class)
+        ->middleware('permission:reports.view')
+        ->name('reports.profit-loss');
+
     // Report Card
     Route::get('/exam-report-card', ReportCard::class)
         ->middleware('permission:exam-results.view')
         ->name('exam-report-card');
+
+    Route::get('/admit-cards', AdmitCard::class)
+        ->middleware('permission:exams.view')
+        ->name('admit-cards');
 
     // Website CMS
     Route::get('/website/gallery', GalleryIndex::class)

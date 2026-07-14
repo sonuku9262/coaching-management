@@ -42,4 +42,19 @@ class Teacher extends Model
     {
         return $this->hasMany(TeacherAttendance::class);
     }
+
+    public function assignments()
+    {
+        return $this->hasMany(TeacherBatchSubject::class);
+    }
+
+    public function batches()
+    {
+        return Batch::whereIn('id', $this->assignments()->pluck('batch_id'))->get();
+    }
+
+    public function salaryPayments()
+    {
+        return $this->hasMany(TeacherSalaryPayment::class);
+    }
 }

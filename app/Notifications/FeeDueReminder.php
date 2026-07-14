@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use App\Models\Setting;
 use App\Models\StudentRegistration;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -19,7 +20,13 @@ class FeeDueReminder extends Notification implements ShouldQueue
 
     public function via(object $notifiable): array
     {
-        return ['mail'];
+        $channels = ['mail'];
+
+        if (app(\App\Services\SmsService::class)->enabled() && $this->student->mobile) {
+            $channels[] = 'msg91';
+        }
+
+        return $channels;
     }
 
     public function toMail(object $notifiable): MailMessage
@@ -31,5 +38,18 @@ class FeeDueReminder extends Notification implements ShouldQueue
             ->line('Outstanding Balance: ₹ ' . number_format($this->balance, 2))
             ->line('Please clear the dues at the earliest to avoid any late fine.')
             ->line('If you have already paid, kindly ignore this reminder.');
+    }
+
+    public function toMsg91(object $notifiable): ?array
+    {
+        if (! $this->student->mobile) {
+            return null;
+        }
+
+        return [
+            'mobile' => $this->student->mobile,
+            'message' => 'Dear ' . $this->student->name . ', a fee balance of Rs ' . number_format($this->balance, 2)
+                . ' is pending. Please clear it at the earliest. - ' . Setting::get('institute_name', 'Institute'),
+        ];
     }
 }

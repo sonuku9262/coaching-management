@@ -116,6 +116,15 @@
 
                                         </button>
 
+                                        @can('teachers.edit')
+                                            <button class="btn btn-secondary btn-sm" wire:click="manageAssignments({{ $teacher->id }})"
+                                                data-bs-toggle="modal" data-bs-target="#assignModal">
+
+                                                Assign Subjects
+
+                                            </button>
+                                        @endcan
+
                                         @can('users.create')
                                             @if ($teacher->user_id)
                                                 <span class="badge bg-success">Login ✓</span>
@@ -327,6 +336,138 @@
                         </div>
 
                     </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Assign Subjects Modal -->
+
+        <div wire:ignore.self class="modal fade" id="assignModal" tabindex="-1">
+
+            <div class="modal-dialog modal-lg">
+
+                <div class="modal-content">
+
+                    <div class="modal-header bg-secondary text-white">
+
+                        <h5 class="modal-title">
+                            Assign Subjects — {{ $assign_teacher_name }}
+                        </h5>
+
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal">
+                        </button>
+
+                    </div>
+
+                    <div class="modal-body">
+
+                        <div class="row align-items-end mb-3">
+
+                            <div class="col-md-4 mb-2">
+
+                                <label>Course</label>
+
+                                <select class="form-select" wire:model.live="assign_course_id">
+                                    <option value="">Select Course</option>
+                                    @foreach ($courses as $course)
+                                        <option value="{{ $course->id }}">{{ $course->name }}</option>
+                                    @endforeach
+                                </select>
+
+                            </div>
+
+                            <div class="col-md-3 mb-2">
+
+                                <label>Batch</label>
+
+                                <select class="form-select" wire:model="assign_batch_id">
+                                    <option value="">Select Batch</option>
+                                    @foreach ($assignBatches as $batch)
+                                        <option value="{{ $batch->id }}">{{ $batch->name }}</option>
+                                    @endforeach
+                                </select>
+                                @error('assign_batch_id')
+                                    <small class="text-danger">{{ $message }}</small>
+                                @enderror
+
+                            </div>
+
+                            <div class="col-md-3 mb-2">
+
+                                <label>Subject</label>
+
+                                <select class="form-select" wire:model="assign_subject_id">
+                                    <option value="">Select Subject</option>
+                                    @foreach ($assignSubjects as $subject)
+                                        <option value="{{ $subject->id }}">{{ $subject->name }}</option>
+                                    @endforeach
+                                </select>
+                                @error('assign_subject_id')
+                                    <small class="text-danger">{{ $message }}</small>
+                                @enderror
+
+                            </div>
+
+                            <div class="col-md-2 mb-2">
+
+                                <button type="button" class="btn btn-primary w-100" wire:click="addAssignment">
+                                    + Add
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                        <div class="table-responsive">
+
+                            <table class="table table-bordered table-sm mb-0">
+
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>Batch</th>
+                                        <th>Subject</th>
+                                        <th width="90">Action</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+
+                                    @forelse($currentAssignments as $assignment)
+                                        <tr>
+                                            <td>{{ $assignment->batch?->name }}</td>
+                                            <td>{{ $assignment->subject?->name }}</td>
+                                            <td>
+                                                <button class="btn btn-danger btn-sm"
+                                                    wire:click="removeAssignment({{ $assignment->id }})"
+                                                    wire:confirm="Remove this assignment?">
+                                                    Remove
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="3" class="text-center">No Subjects Assigned Yet</td>
+                                        </tr>
+                                    @endforelse
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                    </div>
+
+                    <div class="modal-footer">
+
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            Close
+                        </button>
+
+                    </div>
 
                 </div>
 

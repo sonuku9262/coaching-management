@@ -58,6 +58,22 @@
 
                                 </div>
 
+                                <div class="d-flex gap-2 flex-wrap mt-3">
+
+                                    <a href="/parent/attendance?student_id={{ $child['student']->id }}" class="btn btn-outline-primary btn-sm">
+                                        📋 Attendance
+                                    </a>
+
+                                    <a href="/parent/fees?student_id={{ $child['student']->id }}" class="btn btn-outline-success btn-sm">
+                                        💰 Fees
+                                    </a>
+
+                                    <a href="/parent/results?student_id={{ $child['student']->id }}" class="btn btn-outline-secondary btn-sm">
+                                        📝 Results
+                                    </a>
+
+                                </div>
+
                             </div>
 
                         </div>

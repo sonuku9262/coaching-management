@@ -18,9 +18,12 @@ class RolePermissionSeeder extends Seeder
     protected array $modules = [
         'User Management' => ['users', 'roles', 'permissions'],
         'Master Data' => ['academic-years', 'academic-sessions', 'courses', 'subjects', 'batches', 'classrooms', 'shifts'],
+        'Timetable' => ['timetables'],
+        'Academics' => ['study-materials', 'homework'],
         'Student Management' => ['students', 'enquiries'],
         'Teacher Management' => ['teachers'],
         'Fee Management' => ['fee-types', 'fee-structures', 'fee-collections'],
+        'Expense Management' => ['expense-categories', 'expenses', 'salary-payments'],
         'Attendance' => ['student-attendance', 'teacher-attendance'],
         'Examination' => ['exams', 'exam-results'],
         'Reports' => ['reports'],
@@ -57,6 +60,9 @@ class RolePermissionSeeder extends Seeder
             'fee-types.view', 'fee-types.create', 'fee-types.edit',
             'fee-structures.view', 'fee-structures.create', 'fee-structures.edit',
             'fee-collections.view', 'fee-collections.create', 'fee-collections.edit',
+            'expense-categories.view', 'expense-categories.create', 'expense-categories.edit',
+            'expenses.view', 'expenses.create', 'expenses.edit',
+            'salary-payments.view', 'salary-payments.create', 'salary-payments.edit',
             'reports.view',
         ]);
 
@@ -66,6 +72,8 @@ class RolePermissionSeeder extends Seeder
             'student-attendance.view', 'student-attendance.create', 'student-attendance.edit',
             'exams.view',
             'exam-results.view', 'exam-results.create', 'exam-results.edit',
+            'study-materials.view', 'study-materials.create', 'study-materials.edit', 'study-materials.delete',
+            'homework.view', 'homework.create', 'homework.edit', 'homework.delete',
         ]);
 
         Role::firstOrCreate(['name' => 'student', 'guard_name' => 'web']);

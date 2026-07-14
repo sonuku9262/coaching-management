@@ -6,22 +6,29 @@ use App\Models\AcademicSession;
 use App\Models\AcademicYear;
 use App\Models\Batch;
 use App\Models\Classroom;
+use App\Models\ClassTimetable;
 use App\Models\Course;
 use App\Models\Enquiry;
 use App\Models\Exam;
 use App\Models\ExamResult;
 use App\Models\ExamSchedule;
+use App\Models\Expense;
+use App\Models\ExpenseCategory;
 use App\Models\FeeCollection;
 use App\Models\FeeStructure;
 use App\Models\FeeType;
+use App\Models\Homework;
 use App\Models\Notice;
 use App\Models\Setting;
 use App\Models\Shift;
 use App\Models\StudentAttendance;
 use App\Models\StudentRegistration;
+use App\Models\StudyMaterial;
 use App\Models\Subject;
 use App\Models\Teacher;
 use App\Models\TeacherAttendance;
+use App\Models\TeacherBatchSubject;
+use App\Models\TeacherSalaryPayment;
 use App\Models\Testimonial;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -205,6 +212,66 @@ class DummyDataSeeder extends Seeder
             $teachers->push($teacher->fresh());
         }
 
+        // ------------------------------------------------ teacher batch/subject assignments + timetable
+        $assignmentMap = [
+            'teacher@demo.test' => [['C12PCM', 'Physics']],
+            'anita.verma@demo.test' => [['C12PCM', 'Chemistry']],
+            'sunil.kumar@demo.test' => [['C10', 'English']],
+            'pooja.singh@demo.test' => [['C10', 'Mathematics'], ['C12PCM', 'Mathematics']],
+            'vikas.gupta@demo.test' => [['COMP', 'Quantitative Aptitude']],
+        ];
+
+        $batchSlotHour = [];
+
+        foreach ($teachers as $teacher) {
+            foreach ($assignmentMap[$teacher->email] ?? [] as [$courseCode, $subjectName]) {
+                $course = $courses->firstWhere('code', $courseCode);
+                $batch = $course ? Batch::where('course_id', $course->id)->first() : null;
+                $subject = $course ? Subject::where('course_id', $course->id)->where('name', $subjectName)->first() : null;
+
+                if (! $batch || ! $subject) {
+                    continue;
+                }
+
+                TeacherBatchSubject::firstOrCreate([
+                    'teacher_id' => $teacher->id,
+                    'batch_id' => $batch->id,
+                    'subject_id' => $subject->id,
+                ]);
+
+                // stagger start times so multiple subjects on the same batch/day don't collide
+                $hour = $batchSlotHour[$batch->id] ??= 9;
+                $batchSlotHour[$batch->id]++;
+
+                foreach (['Monday', 'Wednesday'] as $day) {
+                    ClassTimetable::firstOrCreate(
+                        ['batch_id' => $batch->id, 'day_of_week' => $day, 'start_time' => sprintf('%02d:00', $hour)],
+                        [
+                            'subject_id' => $subject->id,
+                            'teacher_id' => $teacher->id,
+                            'classroom_id' => $roomA->id,
+                            'end_time' => sprintf('%02d:00', $hour + 1),
+                        ],
+                    );
+                }
+
+                StudyMaterial::firstOrCreate(
+                    ['batch_id' => $batch->id, 'subject_id' => $subject->id, 'title' => $subject->name . ' — Chapter 1 Notes'],
+                    ['teacher_id' => $teacher->id, 'description' => 'Introductory notes for ' . $subject->name . '.', 'status' => true],
+                );
+
+                Homework::firstOrCreate(
+                    ['batch_id' => $batch->id, 'subject_id' => $subject->id, 'title' => $subject->name . ' — Practice Set 1'],
+                    [
+                        'teacher_id' => $teacher->id,
+                        'description' => 'Solve the practice questions and submit in class.',
+                        'due_date' => now()->addDays(5)->toDateString(),
+                        'status' => true,
+                    ],
+                );
+            }
+        }
+
         // ------------------------------------------------ students (+ demo logins)
         $studentNames = [
             'Aman Kumar', 'Priya Sharma', 'Rahul Singh', 'Sneha Gupta', 'Vivek Yadav',
@@ -299,6 +366,63 @@ class DummyDataSeeder extends Seeder
                     'receipt_no' => 'RCPT-2026-' . str_pad($receiptNo++, 5, '0', STR_PAD_LEFT),
                     'payment_date' => now()->subDays(rand(1, 20))->toDateString(),
                     'status' => true,
+                ]);
+            }
+        }
+
+        // ------------------------------------------------ expense categories, expenses & salary payments
+        $expenseCategoryData = [
+            ['Rent', 'RENT'],
+            ['Electricity', 'ELEC'],
+            ['Stationery', 'STAT'],
+            ['Marketing', 'MKTG'],
+            ['Maintenance', 'MAINT'],
+        ];
+
+        $expenseCategories = collect();
+
+        foreach ($expenseCategoryData as [$name, $code]) {
+            $expenseCategories->push(ExpenseCategory::firstOrCreate(
+                ['code' => $code],
+                ['name' => $name, 'status' => true],
+            ));
+        }
+
+        if (Expense::count() === 0) {
+            $expenseVoucher = 1;
+
+            foreach ([
+                ['Rent', 15000, 'Landlord — Mr. Sharma', 1],
+                ['Electricity', 3200, 'State Electricity Board', 3],
+                ['Stationery', 1800, 'Patna Stationers', 5],
+                ['Marketing', 2500, 'Local Newspaper Ad', 10],
+                ['Maintenance', 1200, 'AC Service', 12],
+            ] as [$categoryName, $amount, $paidTo, $daysAgo]) {
+                Expense::create([
+                    'expense_category_id' => $expenseCategories->firstWhere('name', $categoryName)->id,
+                    'amount' => $amount,
+                    'expense_date' => now()->subDays($daysAgo)->toDateString(),
+                    'payment_mode' => 'Cash',
+                    'paid_to' => $paidTo,
+                    'voucher_no' => 'EXP-2026-' . str_pad($expenseVoucher++, 5, '0', STR_PAD_LEFT),
+                    'status' => true,
+                ]);
+            }
+        }
+
+        if (TeacherSalaryPayment::count() === 0) {
+            $salaryVoucher = 1;
+
+            foreach ($teachers as $teacher) {
+                TeacherSalaryPayment::create([
+                    'teacher_id' => $teacher->id,
+                    'salary_month' => now()->subMonthNoOverflow()->startOfMonth()->toDateString(),
+                    'amount' => $teacher->salary,
+                    'deduction' => 0,
+                    'paid_amount' => $teacher->salary,
+                    'payment_date' => now()->subMonthNoOverflow()->startOfMonth()->addDays(4)->toDateString(),
+                    'payment_mode' => 'Bank Transfer',
+                    'voucher_no' => 'SAL-2026-' . str_pad($salaryVoucher++, 5, '0', STR_PAD_LEFT),
                 ]);
             }
         }

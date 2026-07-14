@@ -165,6 +165,60 @@
 
                 </div>
 
+                <hr>
+
+                <h5 class="fw-bold mb-3">💳 Payment Gateway (Razorpay)</h5>
+
+                <div class="row">
+
+                    <div class="col-md-12 mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="razorpay_enabled" wire:model="razorpay_enabled">
+                        <label class="form-check-label" for="razorpay_enabled">Enable online fee payment via Razorpay</label>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label>Razorpay Key ID</label>
+                        <input type="text" class="form-control" wire:model="razorpay_key_id" placeholder="rzp_live_xxxxxxxxxxxx">
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label>Razorpay Key Secret</label>
+                        <input type="password" class="form-control" wire:model="razorpay_key_secret" placeholder="••••••••••••">
+                    </div>
+
+                    <div class="col-12">
+                        <small class="text-muted">Get these from your Razorpay Dashboard → Settings → API Keys. Students will see a "Pay Online" button only once both keys are saved and the toggle above is on.</small>
+                    </div>
+
+                </div>
+
+                <hr>
+
+                <h5 class="fw-bold mb-3">📱 SMS / WhatsApp (MSG91)</h5>
+
+                <div class="row">
+
+                    <div class="col-md-12 mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="sms_enabled" wire:model="sms_enabled">
+                        <label class="form-check-label" for="sms_enabled">Enable SMS alerts (fee reminders, absence alerts)</label>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label>MSG91 Auth Key</label>
+                        <input type="password" class="form-control" wire:model="msg91_auth_key" placeholder="••••••••••••">
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label>MSG91 Sender ID</label>
+                        <input type="text" class="form-control" wire:model="msg91_sender_id" placeholder="e.g. SUNRSE (6-char DLT approved)">
+                    </div>
+
+                    <div class="col-12">
+                        <small class="text-muted">Get the auth key from your MSG91 dashboard. The sender ID must be DLT-registered for Indian mobile numbers before SMS will actually deliver.</small>
+                    </div>
+
+                </div>
+
                 @can('settings.edit')
                 <button type="submit" class="btn btn-primary">
                     💾 Save Settings

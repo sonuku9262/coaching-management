@@ -3,6 +3,20 @@
 
         <h3 class="fw-bold mb-4">💰 My Fees</h3>
 
+        @if(session()->has('success'))
+            <div class="alert alert-success alert-dismissible fade show">
+                {{ session('success') }}
+                <button class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        @endif
+
+        @if(session()->has('error'))
+            <div class="alert alert-danger alert-dismissible fade show">
+                {{ session('error') }}
+                <button class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        @endif
+
         @if(! $student)
 
             <div class="alert alert-warning">
@@ -63,6 +77,9 @@
                                     <th>Paid</th>
                                     <th>Balance</th>
                                     <th>Mode</th>
+                                    @if($razorpayConfigured)
+                                        <th>Action</th>
+                                    @endif
                                 </tr>
                             </thead>
 
@@ -82,12 +99,26 @@
                                             ₹ {{ number_format($payment->balance, 2) }}
                                         </td>
                                         <td>{{ $payment->payment_mode }}</td>
+                                        @if($razorpayConfigured)
+                                            <td>
+                                                @if($payment->balance > 0)
+                                                    <button type="button" class="btn btn-primary btn-sm"
+                                                        wire:click="createOrder({{ $payment->id }})"
+                                                        wire:loading.attr="disabled"
+                                                        wire:target="createOrder({{ $payment->id }})">
+                                                        💳 Pay Online
+                                                    </button>
+                                                @else
+                                                    -
+                                                @endif
+                                            </td>
+                                        @endif
                                     </tr>
 
                                 @empty
 
                                     <tr>
-                                        <td colspan="9" class="text-center">No Payments Yet</td>
+                                        <td colspan="{{ $razorpayConfigured ? 10 : 9 }}" class="text-center">No Payments Yet</td>
                                     </tr>
 
                                 @endforelse
@@ -100,7 +131,12 @@
 
                     @if($summary['balance'] > 0)
                         <div class="alert alert-danger mb-0 mt-2">
-                            ⚠️ Aapka ₹ {{ number_format($summary['balance'], 2) }} balance due hai — kripya office me jama karein.
+                            ⚠️ Aapka ₹ {{ number_format($summary['balance'], 2) }} balance due hai —
+                            @if($razorpayConfigured)
+                                upar "Pay Online" se turant jama karein ya office me jama karein.
+                            @else
+                                kripya office me jama karein.
+                            @endif
                         </div>
                     @endif
 
@@ -112,3 +148,38 @@
 
     </div>
 </div>
+
+@if($razorpayConfigured)
+    @push('scripts')
+        <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+        <script>
+            document.addEventListener('livewire:init', () => {
+                Livewire.on('razorpay-checkout-open', (event) => {
+                    const data = Array.isArray(event) ? event[0] : event;
+
+                    const options = {
+                        key: data.key,
+                        order_id: data.order_id,
+                        amount: data.amount,
+                        currency: 'INR',
+                        name: data.name,
+                        description: data.description,
+                        handler: function (response) {
+                            @this.call(
+                                'verifyPayment',
+                                data.fee_collection_id,
+                                response.razorpay_payment_id,
+                                response.razorpay_order_id,
+                                response.razorpay_signature
+                            );
+                        },
+                        theme: { color: '#0d6efd' },
+                    };
+
+                    const rzp = new Razorpay(options);
+                    rzp.open();
+                });
+            });
+        </script>
+    @endpush
+@endif

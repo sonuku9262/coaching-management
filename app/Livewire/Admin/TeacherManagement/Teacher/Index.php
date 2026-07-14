@@ -6,6 +6,10 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\WithFileUploads;
 use App\Models\Teacher;
+use App\Models\TeacherBatchSubject;
+use App\Models\Course;
+use App\Models\Batch;
+use App\Models\Subject;
 use App\Services\PortalAccountService;
 
 class Index extends Component
@@ -15,6 +19,13 @@ class Index extends Component
     public $search = '';
 
     public $teacher_id;
+
+    // Assign Subjects modal
+    public $assign_teacher_id;
+    public $assign_teacher_name;
+    public $assign_course_id;
+    public $assign_batch_id;
+    public $assign_subject_id;
 
     public $employee_id;
     public $name;
@@ -126,6 +137,54 @@ class Index extends Component
         );
     }
 
+    public function updatedAssignCourseId()
+    {
+        $this->assign_batch_id = '';
+        $this->assign_subject_id = '';
+    }
+
+    public function manageAssignments($id)
+    {
+        abort_unless(auth()->user()->can('teachers.edit'), 403);
+
+        $teacher = Teacher::findOrFail($id);
+
+        $this->assign_teacher_id = $teacher->id;
+        $this->assign_teacher_name = $teacher->name;
+        $this->assign_course_id = '';
+        $this->assign_batch_id = '';
+        $this->assign_subject_id = '';
+    }
+
+    public function addAssignment()
+    {
+        abort_unless(auth()->user()->can('teachers.edit'), 403);
+
+        $this->validate([
+            'assign_batch_id' => 'required|exists:batches,id',
+            'assign_subject_id' => 'required|exists:subjects,id',
+        ]);
+
+        TeacherBatchSubject::firstOrCreate([
+            'teacher_id' => $this->assign_teacher_id,
+            'batch_id' => $this->assign_batch_id,
+            'subject_id' => $this->assign_subject_id,
+        ]);
+
+        $this->assign_subject_id = '';
+
+        session()->flash('success', 'Subject Assigned Successfully.');
+    }
+
+    public function removeAssignment($id)
+    {
+        abort_unless(auth()->user()->can('teachers.edit'), 403);
+
+        TeacherBatchSubject::findOrFail($id)->delete();
+
+        session()->flash('success', 'Assignment Removed Successfully.');
+    }
+
     public function resetForm()
     {
         $this->reset([
@@ -155,6 +214,23 @@ class Index extends Component
                     ->orWhere('employee_id', 'like', '%' . $this->search . '%')
                     ->latest()
                     ->paginate(10),
+
+                'courses' => Course::where('status', 1)->get(),
+
+                'assignBatches' => $this->assign_course_id
+                    ? Batch::where('course_id', $this->assign_course_id)->where('status', 1)->get()
+                    : collect(),
+
+                'assignSubjects' => $this->assign_course_id
+                    ? Subject::where('course_id', $this->assign_course_id)->where('status', 1)->get()
+                    : collect(),
+
+                'currentAssignments' => $this->assign_teacher_id
+                    ? TeacherBatchSubject::with(['batch', 'subject'])
+                        ->where('teacher_id', $this->assign_teacher_id)
+                        ->latest()
+                        ->get()
+                    : collect(),
             ]
         )->layout('layouts.admin');
     }
